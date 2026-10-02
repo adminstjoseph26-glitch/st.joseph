@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>St Joseph's College | Home</title>
+<meta name="description" content="St Joseph's College: online library catalogue (OPAC), E-Library, student registration and college management system.">
+<meta name="theme-color" content="#264a8f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%2314284b'/%3E%3Cpath d='M30 12h4v14h14v4H34v22h-4V30H16v-4h14z' fill='%23c8a24a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&family=Public+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#14284b; --blue:#264a8f; --blue2:#1d3b75; --gold:#c8a24a; --gold-d:#9c7a27;
+  --paper:#f4f6fa; --white:#fff; --ink:#1b2333; --muted:#5b6679; --line:#dfe4ee;
+  --ok:#1f7a4d; --warn:#a85f00; --bad:#b3261e;
+  --head:'Newsreader',Georgia,'Times New Roman',serif;
+  --body:'Public Sans',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+  --r:6px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--body);color:var(--ink);background:var(--white);line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:var(--blue);text-decoration:none}
+a:hover{text-decoration:underline}
+h1,h2,h3,h4{font-family:var(--head);color:var(--navy);line-height:1.2;margin:0 0 .5em;font-weight:600}
+h1{font-size:clamp(2rem,4.6vw,3.4rem)} h2{font-size:clamp(1.6rem,3vw,2.2rem)} h3{font-size:1.3rem} h4{font-size:1.1rem}
+p{margin:0 0 1em}
+:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{width:min(1200px,92%);margin:0 auto}
+.sr{position:absolute;left:-9999px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font:600 .95rem var(--body);padding:.75rem 1.25rem;border-radius:var(--r);border:2px solid var(--blue);background:var(--blue);color:#fff;cursor:pointer;text-decoration:none;transition:background .15s,color .15s,border-color .15s}
+.btn:hover{background:var(--navy);border-color:var(--navy);text-decoration:none;color:#fff}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.btn.gold:hover{background:#d8b45a;border-color:#d8b45a;color:var(--navy)}
+.btn.ghost{background:transparent;color:var(--blue)}
+.btn.ghost:hover{background:var(--blue);color:#fff}
+.btn.light{background:transparent;border-color:#fff;color:#fff}
+.btn.light:hover{background:#fff;color:var(--navy)}
+.btn.sm{padding:.4rem .75rem;font-size:.82rem}
+.btn.danger{background:var(--bad);border-color:var(--bad)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+
+/* top strip + header */
+.strip{background:var(--navy);color:#cfd8ec;font-size:.85rem}
+.strip .wrap{display:flex;justify-content:flex-end;gap:1.4rem;padding:.45rem 0;flex-wrap:wrap}
+.strip a,.strip button{color:#cfd8ec;background:none;border:0;font:inherit;cursor:pointer;padding:0}
+.strip a:hover,.strip button:hover{color:#fff;text-decoration:underline}
+.brandbar{background:#fff;border-bottom:1px solid var(--line)}
+.brandbar .wrap{display:flex;align-items:center;gap:1rem;padding:.9rem 0}
+.brand{display:flex;align-items:center;gap:.9rem;color:var(--navy);text-decoration:none}
+.brand:hover{text-decoration:none}
+.brand svg{width:58px;height:58px;flex:none}
+.brand b{font:700 1.55rem/1.1 var(--head);display:block}
+.brand small{color:var(--muted);font-size:.85rem}
+.burger{display:none;margin-left:auto;background:none;border:2px solid var(--navy);border-radius:var(--r);padding:.4rem .6rem;cursor:pointer;color:var(--navy);font-weight:700}
+.nav{background:var(--blue);position:sticky;top:0;z-index:40}
+.nav ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap}
+.nav li{position:relative}
+.nav a.top,.nav button.top{display:block;color:#fff;padding:.95rem 1.1rem;font:600 .93rem var(--body);background:none;border:0;cursor:pointer;text-decoration:none}
+.nav li:hover>a.top,.nav li:hover>button.top,.nav a.top.on{background:var(--blue2)}
+.nav .sub{display:none;position:absolute;left:0;top:100%;min-width:230px;background:#fff;border-top:3px solid var(--gold);box-shadow:0 12px 28px rgba(20,40,75,.18);padding:.4rem 0}
+.nav li:hover>.sub,.nav li:focus-within>.sub{display:block}
+.nav .sub a{display:block;padding:.6rem 1.1rem;color:var(--ink);font-size:.92rem}
+.nav .sub a:hover{background:var(--paper);text-decoration:none;color:var(--blue)}
+.nav .right{margin-left:auto;display:flex;align-items:center;padding:.4rem 0}
+@media(max-width:900px){
+  .burger{display:block}
+  .nav{display:none;position:static}
+  .nav.open{display:block}
+  .nav ul{flex-direction:column}
+  .nav .sub{position:static;display:block;box-shadow:none;border:0;background:var(--blue2);padding:0}
+  .nav .sub a{color:#dbe5fb;padding-left:2rem}
+  .nav .right{padding:.6rem 1rem}
+  .brand svg{width:46px;height:46px}.brand b{font-size:1.2rem}
+}
+
+/* hero */
+.hero{position:relative;height:min(76vh,640px);min-height:430px;background:var(--navy);overflow:hidden}
+.slide{position:absolute;inset:0;opacity:0;transition:opacity .9s ease;visibility:hidden}
+.slide.on{opacity:1;visibility:visible}
+.slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.slide::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,40,75,.92) 0%,rgba(20,40,75,.7) 45%,rgba(20,40,75,.15) 100%)}
+.slide .copy{position:relative;z-index:2;height:100%;display:flex;flex-direction:column;justify-content:center;max-width:640px;color:#fff}
+.slide h1{color:#fff;margin-bottom:.4em}
+.slide p{font-size:1.12rem;color:#e3eaf9;max-width:52ch}
+.slide .row{display:flex;gap:.8rem;flex-wrap:wrap;margin-top:.6rem}
+.hctl{position:absolute;z-index:5;bottom:1.4rem;left:0;right:0}
+.hctl .wrap{display:flex;gap:.5rem;align-items:center}
+.dot{width:34px;height:5px;border:0;background:rgba(255,255,255,.4);cursor:pointer;padding:0}
+.dot.on{background:var(--gold)}
+.arrow{position:absolute;z-index:5;top:50%;transform:translateY(-50%);width:44px;height:44px;border-radius:50%;border:2px solid rgba(255,255,255,.7);background:rgba(20,40,75,.4);color:#fff;font-size:1.3rem;cursor:pointer}
+.arrow:hover{background:var(--gold);border-color:var(--gold);color:var(--navy)}
+.arrow.l{left:1rem}.arrow.r{right:1rem}
+@media(max-width:700px){.arrow{display:none}}
+
+/* sections */
+section.sec{padding:4.2rem 0}
+section.sec.alt{background:var(--paper)}
+.sechead{display:flex;align-items:end;justify-content:space-between;gap:1rem;flex-wrap:wrap;margin-bottom:1.8rem}
+.sechead h2{margin:0}
+.sechead p{margin:.3rem 0 0;color:var(--muted)}
+.grid{display:grid;gap:1.5rem}
+.g2{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:980px){.g4{grid-template-columns:repeat(2,1fr)}.g3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+.card .ph{aspect-ratio:16/10;background:linear-gradient(135deg,var(--blue),var(--navy));position:relative;overflow:hidden}
+.card .ph img{width:100%;height:100%;object-fit:cover}
+.card .bd{padding:1.2rem 1.3rem 1.4rem;display:flex;flex-direction:column;flex:1}
+.card .bd p{color:var(--muted);font-size:.95rem}
+.card .bd .more{margin-top:auto;font-weight:600}
+.tag{display:inline-block;background:#e8eefb;color:var(--blue);font-size:.78rem;font-weight:600;padding:.15rem .6rem;border-radius:99px;margin-bottom:.6rem;align-self:flex-start}
+
+.cats .item{border-left:4px solid var(--gold);padding:.2rem 0 .2rem 1.1rem}
+.cats .item p{color:var(--muted);margin:0}
+
+.vmm{background:var(--navy);color:#fff}
+.vmm h3{color:var(--gold);margin-bottom:.4rem}
+.vmm p{color:#dbe5fb;margin:0}
+.vmm .grid{gap:2.2rem}
+
+.about-split{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center}
+.about-split img{width:100%;height:100%;max-height:460px;object-fit:cover;border-radius:var(--r);background:var(--navy)}
+@media(max-width:860px){.about-split{grid-template-columns:1fr}}
+.ticks{list-style:none;padding:0;margin:1rem 0}
+.ticks li{padding-left:1.7rem;position:relative;margin-bottom:.55rem}
+.ticks li::before{content:"";position:absolute;left:0;top:.5rem;width:.9rem;height:.5rem;border-left:3px solid var(--gold);border-bottom:3px solid var(--gold);transform:rotate(-45deg)}
+
+.statband{background:var(--blue);color:#fff;padding:2.2rem 0}
+.statband .grid{text-align:center}
+.statband b{font:700 2.4rem var(--head);display:block;color:#fff}
+.statband span{color:#cdd9f4;font-size:.95rem}
+
+.listrow{display:flex;gap:1rem;padding:.9rem 0;border-bottom:1px solid var(--line)}
+.listrow .badge{align-self:center;flex:none}
+.datebox{flex:none;width:62px;text-align:center;background:var(--blue);color:#fff;border-radius:var(--r);padding:.35rem 0;line-height:1.15}
+.datebox b{display:block;font:700 1.4rem var(--head)}.datebox span{font-size:.75rem}
+.newsimg{aspect-ratio:16/10;background:linear-gradient(135deg,var(--blue),var(--navy));overflow:hidden}
+.newsimg img{width:100%;height:100%;object-fit:cover}
+
+.fac{position:relative;border-radius:var(--r);overflow:hidden;aspect-ratio:4/3;background:linear-gradient(135deg,var(--blue),var(--navy));color:#fff}
+.fac img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fac::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(20,40,75,.92),rgba(20,40,75,0) 62%)}
+.fac div{position:absolute;z-index:2;left:1rem;right:1rem;bottom:.9rem}
+.fac h4{color:#fff;margin:0}.fac span{font-size:.88rem;color:#dbe5fb}
+
+details.faq{border:1px solid var(--line);border-radius:var(--r);background:#fff;margin-bottom:.7rem}
+details.faq summary{cursor:pointer;padding:1rem 1.2rem;font-weight:600;color:var(--navy);list-style:none;display:flex;justify-content:space-between;gap:1rem}
+details.faq summary::after{content:"+";font-size:1.3rem;line-height:1;color:var(--gold-d)}
+details.faq[open] summary::after{content:"\2212"}
+details.faq p{padding:0 1.2rem 1.1rem;margin:0;color:var(--muted)}
+
+.pagehead{background:linear-gradient(90deg,var(--navy),var(--blue));color:#fff;padding:2.6rem 0}
+.pagehead h1{color:#fff;margin:0;font-size:clamp(1.8rem,3.5vw,2.6rem)}
+.pagehead p{margin:.4rem 0 0;color:#cdd9f4}
+.crumbs{font-size:.85rem;color:#b8c7ea;margin-bottom:.5rem}.crumbs a{color:#fff}
+
+/* forms */
+.panel{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1.6rem}
+.fgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem 1.2rem}
+.fgrid .full{grid-column:1/-1}
+@media(max-width:640px){.fgrid{grid-template-columns:1fr}}
+.field label{display:block;font-weight:600;font-size:.88rem;margin-bottom:.3rem;color:var(--navy)}
+.field label i{color:var(--bad);font-style:normal}
+.field input,.field select,.field textarea{width:100%;font:inherit;padding:.65rem .75rem;border:1px solid #c5cddd;border-radius:var(--r);background:#fff;color:var(--ink)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);outline:3px solid #cfdcf7;outline-offset:0}
+.field textarea{min-height:110px;resize:vertical}
+.field small{color:var(--muted);font-size:.8rem}
+fieldset{border:1px solid var(--line);border-radius:var(--r);padding:1rem 1.2rem 1.2rem;margin:0 0 1.2rem}
+legend{font:600 1.05rem var(--head);color:var(--navy);padding:0 .5rem}
+.note{background:#fff8e6;border:1px solid #efd99a;border-radius:var(--r);padding:.8rem 1rem;font-size:.9rem;color:#5c4a12}
+.okbox{background:#eaf6ef;border:1px solid #b7dcc6;border-radius:var(--r);padding:1.4rem}
+.formsplit{display:grid;grid-template-columns:1.6fr 1fr;gap:2rem;align-items:start}
+@media(max-width:900px){.formsplit{grid-template-columns:1fr}}
+.side-img{border-radius:var(--r);overflow:hidden;background:var(--navy);aspect-ratio:4/5}
+.side-img img{width:100%;height:100%;object-fit:cover}
+.steps{counter-reset:s;list-style:none;padding:0;margin:1rem 0 0}
+.steps li{counter-increment:s;position:relative;padding:0 0 1rem 2.6rem}
+.steps li::before{content:counter(s);position:absolute;left:0;top:0;width:1.8rem;height:1.8rem;border-radius:50%;background:var(--gold);color:var(--navy);font-weight:700;display:grid;place-items:center;font-size:.9rem}
+
+/* opac */
+.searchbar{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.2rem}
+.searchbar input{flex:1;min-width:220px}
+.res{border:1px solid var(--line);border-radius:var(--r);background:#fff;padding:1rem 1.2rem;margin-bottom:.8rem;display:flex;justify-content:space-between;gap:1rem;align-items:center}
+.res h4{margin:0 0 .15rem}.res small{color:var(--muted)}
+.badge{display:inline-block;font-size:.76rem;font-weight:600;padding:.12rem .6rem;border-radius:99px;white-space:nowrap}
+.badge.ok{background:#e1f3e8;color:var(--ok)}.badge.warn{background:#fdf0d8;color:var(--warn)}.badge.bad{background:#fbe3e1;color:var(--bad)}.badge.gray{background:#e9edf4;color:#4a5568}
+
+/* footer */
+footer{background:var(--navy);color:#cdd9f4;padding:3.2rem 0 0;margin-top:0}
+footer h4{color:#fff;font-size:1.1rem}
+footer a{color:#cdd9f4}footer a:hover{color:#fff}
+footer ul{list-style:none;padding:0;margin:0}footer li{margin-bottom:.45rem}
+footer .copy{border-top:1px solid rgba(255,255,255,.15);margin-top:2rem;padding:1rem 0;font-size:.85rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.sub-form{display:flex;gap:.5rem}.sub-form input{flex:1;min-width:0;padding:.6rem .7rem;border-radius:var(--r);border:0;font:inherit}
+
+/* dashboard */
+.dash{display:grid;grid-template-columns:260px 1fr;min-height:100vh;background:var(--paper)}
+.side{background:var(--navy);color:#cdd9f4;padding:1.2rem 0;position:sticky;top:0;height:100vh;overflow-y:auto}
+.side .brand{padding:0 1.2rem 1.2rem;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:.8rem}
+.side .brand b{color:#fff;font-size:1.15rem}.side .brand small{color:#9fb1d8}
+.side .brand svg{width:44px;height:44px}
+.side nav a{display:flex;align-items:center;gap:.7rem;padding:.7rem 1.2rem;color:#cdd9f4;font-weight:500;font-size:.95rem;border-left:4px solid transparent}
+.side nav a:hover{background:rgba(255,255,255,.06);text-decoration:none;color:#fff}
+.side nav a.on{background:rgba(255,255,255,.1);border-left-color:var(--gold);color:#fff}
+.side nav svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.side .grp{padding:.9rem 1.2rem .3rem;font-size:.75rem;color:#8ea2cf;letter-spacing:.04em}
+.dmain{min-width:0}
+.dtop{background:#fff;border-bottom:1px solid var(--line);padding:.8rem 1.6rem;display:flex;align-items:center;gap:1rem;position:sticky;top:0;z-index:30}
+.dtop h2{margin:0;font-size:1.4rem}
+.dtop .sp{flex:1}
+.dtop .who{font-size:.9rem;text-align:right;line-height:1.3}.dtop .who small{color:var(--muted)}
+.dburger{display:none;background:none;border:2px solid var(--navy);border-radius:var(--r);padding:.3rem .6rem;font-weight:700;color:var(--navy);cursor:pointer}
+.dbody{padding:1.6rem}
+@media(max-width:960px){
+  .dash{grid-template-columns:1fr}
+  .side{position:fixed;left:0;top:0;bottom:0;width:270px;z-index:60;transform:translateX(-100%);transition:transform .2s}
+  .side.open{transform:none}
+  .dburger{display:block}
+  .dbody{padding:1rem}
+  .scrim{position:fixed;inset:0;background:rgba(10,20,40,.5);z-index:55}
+}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1rem;margin-bottom:1.4rem}
+.stat{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:1rem 1.2rem;border-top:4px solid var(--blue)}
+.stat b{font:700 2rem var(--head);color:var(--navy);display:block;line-height:1.1}
+.stat span{color:var(--muted);font-size:.88rem}
+.stat.g{border-top-color:var(--gold)}.stat.r{border-top-color:var(--bad)}.stat.o{border-top-color:var(--ok)}
+.dgrid{display:grid;grid-template-columns:1.4fr 1fr;gap:1.2rem}
+@media(max-width:1100px){.dgrid{grid-template-columns:1fr}}
+.tools{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
+.tools input[type=search],.tools select{padding:.55rem .75rem;border:1px solid #c5cddd;border-radius:var(--r);font:inherit;background:#fff}
+.tools input[type=search]{flex:1;min-width:200px}
+.tools .sp{flex:1}
+.tw{overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:var(--r)}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th{background:#eef2f9;text-align:left;padding:.7rem .9rem;font-weight:600;color:var(--navy);white-space:nowrap;border-bottom:1px solid var(--line)}
+td{padding:.65rem .9rem;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#fafbfe}
+td .acts{display:flex;gap:.35rem;flex-wrap:nowrap}
+.empty{padding:2.4rem 1rem;text-align:center;color:var(--muted)}
+.bars .row{display:grid;grid-template-columns:150px 1fr 36px;gap:.7rem;align-items:center;margin-bottom:.7rem;font-size:.88rem}
+.bars .track{background:#e9edf4;height:14px;border-radius:99px;overflow:hidden}
+.bars .fill{display:block;height:100%;background:var(--blue);border-radius:99px}
+@media(max-width:560px){.bars .row{grid-template-columns:100px 1fr 30px}}
+.modalback{position:fixed;inset:0;background:rgba(10,20,40,.55);z-index:100;display:grid;place-items:center;padding:1rem;overflow-y:auto}
+.modal{background:#fff;border-radius:var(--r);width:min(680px,100%);max-height:94vh;overflow-y:auto;padding:1.5rem;box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.modal h3{margin-bottom:1rem}
+.modal .foot{display:flex;justify-content:flex-end;gap:.6rem;margin-top:1.2rem}
+.toast{position:fixed;bottom:1.2rem;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:.75rem 1.2rem;border-radius:var(--r);z-index:200;box-shadow:0 8px 24px rgba(0,0,0,.3);max-width:92%}
+.toast.err{background:var(--bad)}
+.kv{display:grid;grid-template-columns:160px 1fr;gap:.45rem 1rem;font-size:.95rem}
+.kv dt{color:var(--muted)}.kv dd{margin:0;font-weight:500}
+@media(max-width:560px){.kv{grid-template-columns:1fr}}
+.loginwrap{min-height:70vh;display:grid;place-items:center;padding:3rem 1rem;background:var(--paper)}
+.loginbox{width:min(440px,100%)}
+@media print{
+  body *{visibility:hidden}
+  #printArea,#printArea *{visibility:visible}
+  #printArea{position:absolute;left:0;top:0;width:100%}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<a class="sr" href="#main">Skip to content</a>
+<div id="app"></div>
+<div id="layer"></div>
+
+<script>
+/* =========================================================
+   SITE SETTINGS - edit these to match the college
+   ========================================================= */
+const SITE = {
+  name: "St Joseph's College",
+  short: "SJC",
+  email: "info@stjosephs.ac.tz",
+  phone: "+255 000 000 000",
+  address: "P.O. Box 000, Tanzania",
+  staffMail: "mailto:info@stjosephs.ac.tz",
+  social: { facebook: "#", instagram: "#", x: "#", youtube: "#" }
+};
+
+/* Photos: Unsplash (free to use under the Unsplash License) */
+const PH = {
+  lib:    "ggeZ9oyI-PE",   // library shelves, Priscilla Du Preez
+  reading:"yaRFxRWH_aY",   // reading room, Mario Azzi
+  laptop: "Su1XYFlftXA",   // student on a laptop, Hasnain Ayaz
+  desk:   "xqDFr1SiKgY",   // laptop and books, Tharusha Jayasooriya
+  grad:   "rC4FVECt4sE",   // graduate at sunset, Zanyar Ibrahim
+  smile:  "QfrTfjHzQIU",   // graduate, Joecalih
+  hall:   "sgQM3gsGD9s"    // graduates in hall, Blessfield John
+};
+const img = (k, w = 1400) => `https://unsplash.com/photos/${PH[k]}/download?force=true&w=${w}`;
+
+const PROGRAMMES = [
+  { code:"DIE", name:"Diploma in Education", level:"Diploma", years:2, img:"smile",
+    blurb:"Prepares teachers with classroom practice, curriculum design and assessment skills.",
+    courses:["Foundations of Education","Teaching Methods","Educational Psychology","Curriculum Studies","Assessment and Evaluation","Teaching Practice"] },
+  { code:"CIT", name:"Certificate in Information Technology", level:"Certificate", years:1, img:"laptop",
+    blurb:"Hands-on computing: office applications, networking basics, databases and web skills.",
+    courses:["Computer Fundamentals","Office Applications","Networking Basics","Databases","Web Basics","Computer Maintenance"] },
+  { code:"DBA", name:"Diploma in Business Administration", level:"Diploma", years:2, img:"desk",
+    blurb:"Management, accounting, marketing and entrepreneurship for the modern workplace.",
+    courses:["Principles of Management","Financial Accounting","Marketing","Business Law","Entrepreneurship","Business Communication"] },
+  { code:"CLI", name:"Certificate in Library and Information Studies", level:"Certificate", years:1, img:"lib",
+    blurb:"Cataloguing, classification, records management and digital library services.",
+    courses:["Cataloguing and Classification","Information Sources","Records Management","Digital Libraries","Library Management","User Services"] },
+  { code:"CCD", name:"Certificate in Community Development", level:"Certificate", years:1, img:"grad",
+    blurb:"Community engagement, project planning and social development practice.",
+    courses:["Community Mobilisation","Project Planning","Social Policy","Research Methods","Communication Skills","Field Practice"] }
+];
+
+/* =========================================================
+   Language (English / Kiswahili)
+   ========================================================= */
+const SW = {
+ "Home":"Mwanzo","About Us":"Kuhusu Sisi","Academics":"Taaluma","Programmes":"Programu","Library & E-Library":"Maktaba na Maktaba Mtandao",
+ "Online Catalogue (OPAC)":"Katalogi ya Mtandaoni (OPAC)","E-Library":"Maktaba Mtandao","News & Events":"Habari na Matukio","Contact Us":"Wasiliana Nasi",
+ "Register":"Jisajili","Student Login":"Ingia","Dashboard":"Dashibodi","Log out":"Toka","FAQs":"Maswali","Staff Mail":"Barua pepe ya Wafanyakazi",
+ "Welcome to St Joseph's College":"Karibu St Joseph's College","Apply Now":"Omba Sasa","Register as a student":"Jisajili kama mwanafunzi",
+ "Explore Our Programmes":"Tazama Programu Zetu","View All":"Tazama Zote","Read More":"Soma Zaidi","Our Facilities":"Vifaa Vyetu",
+ "Latest News":"Habari za Karibuni","Events":"Matukio","Announcements":"Matangazo","Get Answers to Some of Your Questions":"Majibu ya Maswali Yako",
+ "Useful Links":"Viungo Muhimu","Join our mailing list":"Jiunge na orodha yetu ya barua pepe","Subscribe":"Jiunge","Contacts":"Mawasiliano",
+ "Student Registration":"Usajili wa Wanafunzi","Create your student account":"Fungua akaunti ya mwanafunzi",
+ "First name":"Jina la kwanza","Middle name":"Jina la kati","Last name":"Jina la mwisho","Gender":"Jinsia","Male":"Me","Female":"Ke",
+ "Date of birth":"Tarehe ya kuzaliwa","Phone number":"Namba ya simu","Email":"Barua pepe","Postal address":"Anwani ya posta","Region":"Mkoa",
+ "Programme":"Programu","Password":"Nenosiri","Submit registration":"Tuma usajili","Send message":"Tuma ujumbe","Search":"Tafuta",
+ "Vision":"Dira","Mission":"Dhima","Motto":"Kauli mbiu","Sign in":"Ingia","Email address":"Anwani ya barua pepe","Students":"Wanafunzi",
+ "Books in catalogue":"Vitabu katika katalogi","Digital resources":"Rasilimali za kidijitali","Programmes offered":"Programu zinazotolewa",
+ "Find a book":"Tafuta kitabu","Available":"Ipo","On loan":"Imekopeshwa","Subject":"Mada","Message":"Ujumbe","Your name":"Jina lako"
+};
+let lang = (() => { try { return localStorage.getItem("sjc_lang") || "en"; } catch (e) { return "en"; } })();
+const t = s => (lang === "sw" && SW[s]) ? SW[s] : s;
+
+/* =========================================================
+   Helpers + storage
+   ========================================================= */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
+const uid = () => Math.random().toString(36).slice(2, 9) + Date.now().toString(36).slice(-3);
+const today = () => new Date().toISOString().slice(0, 10);
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x.toISOString().slice(0, 10); };
+const fmt = d => d ? new Date(d).toLocaleDateString("en-GB", { day:"numeric", month:"short", year:"numeric" }) : "";
+const fullName = s => [s.first, s.middle, s.last].filter(Boolean).join(" ");
+const prog = code => PROGRAMMES.find(p => p.code === code);
+
+const mem = {};
+const store = {
+  get(k) { try { return localStorage.getItem(k); } catch (e) { return mem[k] ?? null; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) { mem[k] = v; } },
+  del(k) { try { localStorage.removeItem(k); } catch (e) { delete mem[k]; } }
+};
+
+/* =========================================================
+   Data
+   ========================================================= */
+let db = { me: null, stats: { students: 0 }, students: [], grades: [], books: [], ebooks: [], loans: [], messages: [], subscribers: [] };
+const me = () => db.me;
+
+function gradeLetter(n) { return n >= 70 ? "A" : n >= 60 ? "B" : n >= 50 ? "C" : n >= 40 ? "D" : "F"; }
+function pad(n, l = 4) { return String(n).padStart(l, "0"); }
+
+/* All data lives in Cloudflare D1 (database) and R2 (files). The browser only keeps a cached copy in `db`. */
+async function api(path, { method = "GET", body, form } = {}) {
+  const opt = { method, credentials: "same-origin", headers: {} };
+  if (form) opt.body = form;
+  else if (body !== undefined) { opt.headers["content-type"] = "application/json"; opt.body = JSON.stringify(body); }
+  let res;
+  try { res = await fetch("/api" + path, opt); }
+  catch (e) { throw new Error("Cannot reach the server. Check your internet connection."); }
+  const data = await res.json().catch(() => ({}));
+  if (res.status === 401 && path !== "/login") { db.me = null; location.hash = "#/login"; }
+  if (!res.ok) throw new Error(data.error || "Something went wrong (" + res.status + ").");
+  return data;
+}
+async function refresh() { db = await api("/bootstrap"); }
+let busy = false;
+async function act(fn, okMsg) {
+  if (busy) return false;
+  busy = true;
+  try { await fn(); await refresh(); render(); if (okMsg) toast(okMsg); return true; }
+  catch (e) { toast(e.message, true); return false; }
+  finally { busy = false; }
+}
+
+/* =========================================================
+   UI helpers: toast, modal, csv
+   ========================================================= */
+function toast(msg, err) {
+  const d = document.createElement("div");
+  d.className = "toast" + (err ? " err" : ""); d.setAttribute("role", "status"); d.textContent = msg;
+  document.body.appendChild(d); setTimeout(() => d.remove(), 3400);
+}
+function closeModal() { $("#layer").innerHTML = ""; }
+function modal(title, body, onSubmit, okLabel = "Save changes") {
+  $("#layer").innerHTML = `<div class="modalback" data-act="modalback"><form class="modal" role="dialog" aria-modal="true" aria-label="${esc(title)}">
+    <h3>${esc(title)}</h3>${body}
+    <div class="foot"><button type="button" class="btn ghost" data-act="closeModal">Cancel</button>${onSubmit ? `<button class="btn">${esc(okLabel)}</button>` : ""}</div></form></div>`;
+  const f = $("#layer form");
+  const first = $("input,select,textarea", f); if (first) first.focus();
+  f.addEventListener("submit", async e => {
+    e.preventDefault();
+    if (!onSubmit) return;
+    const data = Object.fromEntries(new FormData(f));
+    const r = await onSubmit(data, f);
+    if (r !== false) closeModal();
+  });
+}
+function csv(name, cols, rows) {
+  const q = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+  const text = [cols.map(q).join(","), ...rows.map(r => r.map(q).join(","))].join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["\ufeff" + text], { type: "text/csv;charset=utf-8" }));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+}
+const fld = (label, name, o = {}) => {
+  const req = o.required ? " required" : "";
+  const star = o.required ? " <i>*</i>" : "";
+  const cls = "field" + (o.full ? " full" : "");
+  let input;
+  if (o.options) input = `<select name="${name}"${req}>${o.placeholder ? `<option value="">${esc(o.placeholder)}</option>` : ""}${o.options.map(x => { const [v, l] = Array.isArray(x) ? x : [x, x]; return `<option value="${esc(v)}"${String(o.value) === String(v) ? " selected" : ""}>${esc(l)}</option>`; }).join("")}</select>`;
+  else if (o.textarea) input = `<textarea name="${name}"${req}>${esc(o.value)}</textarea>`;
+  else input = `<input name="${name}" type="${o.type || "text"}" value="${esc(o.value)}"${req}${o.min != null ? ` min="${o.min}"` : ""}${o.max != null ? ` max="${o.max}"` : ""}${o.minlength ? ` minlength="${o.minlength}"` : ""}${o.autocomplete ? ` autocomplete="${o.autocomplete}"` : ""}${o.pattern ? ` pattern="${o.pattern}"` : ""}${o.accept ? ` accept="${o.accept}"` : ""}>`;
+  return `<div class="${cls}"><label>${esc(label)}${star}</label>${input}${o.hint ? `<small>${esc(o.hint)}</small>` : ""}</div>`;
+};
+
+/* =========================================================
+   Brand + shared chrome
+   ========================================================= */
+const LOGO = `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="31" fill="#14284b" stroke="#c8a24a" stroke-width="2"/><path d="M29.5 13h5v13h13v5h-13v21h-5V31h-13v-5h13z" fill="#c8a24a"/><path d="M14 46c6-3 12-3 18 0 6-3 12-3 18 0v4c-6-3-12-3-18 0-6-3-12-3-18 0z" fill="#fff"/></svg>`;
+
+const IC = {
+  home:'<svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg>',
+  users:'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M16 4.5a3.5 3.5 0 010 7M18 14.2c2.2.7 3.5 2.6 3.5 5.8"/></svg>',
+  chart:'<svg viewBox="0 0 24 24"><path d="M4 20V4M4 20h16M8 16v-5M12 16V8M16 16v-8"/></svg>',
+  book:'<svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2zM4 19a2 2 0 012-2h13"/></svg>',
+  swap:'<svg viewBox="0 0 24 24"><path d="M4 8h14l-3-3M20 16H6l3 3"/></svg>',
+  cloud:'<svg viewBox="0 0 24 24"><path d="M7 18a4.5 4.5 0 01-.5-9A6 6 0 0118 10a4 4 0 010 8zM12 12v6M9.5 14.5L12 12l2.5 2.5"/></svg>',
+  file:'<svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6zM14 3v4h4M9 12h6M9 16h6"/></svg>',
+  mail:'<svg viewBox="0 0 24 24"><path d="M3 6h18v12H3zM3 7l9 7 9-7"/></svg>',
+  gear:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 00-2.2-1.3L14 3h-4l-.4 2.5a7 7 0 00-2.2 1.3l-2.3-1-2 3.4 2 1.5A7 7 0 005 12c0 .4 0 .9.1 1.3l-2 1.5 2 3.4 2.3-1a7 7 0 002.2 1.3L10 21h4l.4-2.5a7 7 0 002.2-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg>',
+  user:'<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg>'
+};
+
+function publicShell(inner, active) {
+  const u = me();
+  const nav = (href, label, key) => `<li><a class="top${active === key ? " on" : ""}" href="${href}">${t(label)}</a></li>`;
+  return `
+  <div class="strip"><div class="wrap">
+    <a href="#/faqs">${t("FAQs")}</a><a href="#/contact">${t("Contact Us")}</a><a href="${SITE.staffMail}">${t("Staff Mail")}</a>
+    <button data-act="lang">${lang === "sw" ? "ENGLISH" : "KISWAHILI"}</button>
+  </div></div>
+  <header class="brandbar"><div class="wrap">
+    <a class="brand" href="#/home">${LOGO}<span><b>${esc(SITE.name)}</b><small>${lang === "sw" ? "Maktaba ya kisasa na mfumo wa usimamizi wa chuo" : "Library, learning and college management"}</small></span></a>
+    <button class="burger" data-act="burger" aria-label="Menu" aria-expanded="false">Menu</button>
+  </div></header>
+  <nav class="nav" id="mainnav" aria-label="Main"><div class="wrap" style="display:flex;flex-wrap:wrap">
+    <ul>
+      ${nav("#/home", "Home", "home")}
+      <li><a class="top${active === "about" ? " on" : ""}" href="#/about">${t("About Us")}</a>
+        <div class="sub"><a href="#/about">${lang === "sw" ? "Kuhusu chuo" : "About the college"}</a><a href="#/library">${lang === "sw" ? "Mifumo mipya ya chuo" : "Our new systems"}</a></div></li>
+      <li><a class="top${active === "programmes" ? " on" : ""}" href="#/programmes">${t("Academics")}</a>
+        <div class="sub"><a href="#/programmes">${t("Programmes")}</a><a href="#/register">${t("Student Registration")}</a></div></li>
+      <li><a class="top${active === "library" ? " on" : ""}" href="#/library">${t("Library & E-Library")}</a>
+        <div class="sub"><a href="#/opac">${t("Online Catalogue (OPAC)")}</a><a href="#/elibrary">${t("E-Library")}</a><a href="#/library">${lang === "sw" ? "Kuhusu maktaba" : "About the library"}</a></div></li>
+      ${nav("#/news", "News & Events", "news")}
+      ${nav("#/contact", "Contact Us", "contact")}
+    </ul>
+    <div class="right" style="display:flex;gap:.6rem;flex-wrap:wrap">
+      ${u ? `<a class="btn gold sm" href="#/dashboard">${t("Dashboard")}</a><button class="btn light sm" data-act="logout">${t("Log out")}</button>`
+          : `<a class="btn light sm" href="#/login">${t("Student Login")}</a><a class="btn gold sm" href="#/register">${t("Register")}</a>`}
+    </div>
+  </div></nav>
+  <main id="main">${inner}</main>
+  ${footer()}`;
+}
+
+function footer() {
+  return `<footer><div class="wrap">
+    <div class="grid g4">
+      <div><h4>${esc(SITE.name)}</h4><p>${lang === "sw" ? "Chuo kinachowekeza katika maarifa ya kidijitali kwa wanafunzi na wafanyakazi." : "A college investing in digital knowledge for its students and staff."}</p>
+        <p style="display:flex;gap:1rem;flex-wrap:wrap"><a href="${SITE.social.facebook}">Facebook</a><a href="${SITE.social.instagram}">Instagram</a><a href="${SITE.social.x}">X</a><a href="${SITE.social.youtube}">YouTube</a></p></div>
+      <div><h4>${t("Useful Links")}</h4><ul>
+        <li><a href="#/login">Management Information System</a></li><li><a href="#/elibrary">${t("E-Library")}</a></li>
+        <li><a href="#/opac">${t("Online Catalogue (OPAC)")}</a></li><li><a href="${SITE.staffMail}">${t("Staff Mail")}</a></li></ul></div>
+      <div><h4>${t("Contacts")}</h4><ul><li>${esc(SITE.address)}</li><li>${esc(SITE.phone)}</li><li><a href="mailto:${esc(SITE.email)}">${esc(SITE.email)}</a></li></ul></div>
+      <div><h4>${t("Join our mailing list")}</h4><form class="sub-form" data-form="subscribe"><label class="sr" for="subm">${t("Email address")}</label><input id="subm" name="email" type="email" required placeholder="${t("Email address")}"><button class="btn gold sm">${t("Subscribe")}</button></form></div>
+    </div>
+    <div class="copy"><span>&copy; ${new Date().getFullYear()} ${esc(SITE.name)}</span><span>Photos from <a href="https://unsplash.com" target="_blank" rel="noopener">Unsplash</a></span></div>
+  </div></footer>`;
+}
+
+function pageHead(title, sub, crumb) {
+  return `<div class="pagehead"><div class="wrap"><div class="crumbs"><a href="#/home">${t("Home")}</a> / ${esc(crumb || title)}</div><h1>${esc(title)}</h1>${sub ? `<p>${esc(sub)}</p>` : ""}</div></div>`;
+}
+
+/* =========================================================
+   Public pages
+   ========================================================= */
+const NEWS = [
+  { img:"lib", date:"2026-09-28", title:"New library catalogue goes online", text:"Students and staff can now search the full book collection from any device and see which titles are on the shelf." },
+  { img:"reading", date:"2026-09-22", title:"E-Library opens for reading", text:"Softcopy books, study guides and handbooks are available to registered students after signing in." },
+  { img:"laptop", date:"2026-09-15", title:"Online student registration is open", text:"New students can now create an account, choose a programme and submit their registration online." },
+  { img:"hall", date:"2026-09-05", title:"Staff training on the management system", text:"Library and administration staff completed practical sessions on student records, results and reports." }
+];
+
+function pageHome() {
+  const slides = [
+    { img:"lib", h:t("Welcome to St Joseph's College"), p: lang === "sw" ? "Chuo chenye maktaba ya kisasa, katalogi ya mtandaoni na mfumo kamili wa kusimamia wanafunzi." : "A college with a modern library, an online catalogue and a complete system for managing students and records.", a:["#/register", t("Register as a student")], b:["#/programmes", t("Programmes")] },
+    { img:"reading", h: lang === "sw" ? "Soma popote, wakati wowote" : "Read anywhere, any time", p: lang === "sw" ? "Maktaba Mtandao inakupa vitabu na miongozo ya masomo ukiwa na akaunti yako." : "The E-Library gives registered students softcopy books and study guides on any device.", a:["#/elibrary", t("E-Library")], b:["#/opac", t("Online Catalogue (OPAC)")] },
+    { img:"hall", h: lang === "sw" ? "Anza safari yako ya taaluma" : "Start your academic journey", p: lang === "sw" ? "Chagua programu, jaza fomu mtandaoni na upate namba yako ya usajili papo hapo." : "Choose a programme, fill in the form online and receive your admission number straight away.", a:["#/register", t("Apply Now")], b:["#/login", t("Student Login")] }
+  ];
+  const hero = `<section class="hero" aria-roledescription="carousel" aria-label="Highlights">
+    ${slides.map((s, i) => `<div class="slide${i === 0 ? " on" : ""}" data-slide="${i}"><img src="${img(s.img, 1800)}" alt="" ${i ? 'loading="lazy"' : 'fetchpriority="high"'}>
+      <div class="wrap" style="height:100%;position:relative;z-index:2"><div class="copy"><h1>${esc(s.h)}</h1><p>${esc(s.p)}</p>
+      <div class="row"><a class="btn gold" href="${s.a[0]}">${esc(s.a[1])}</a><a class="btn light" href="${s.b[0]}">${esc(s.b[1])}</a></div></div></div></div>`).join("")}
+    <button class="arrow l" data-act="slide" data-d="-1" aria-label="Previous">&#8249;</button><button class="arrow r" data-act="slide" data-d="1" aria-label="Next">&#8250;</button>
+    <div class="hctl"><div class="wrap">${slides.map((_, i) => `<button class="dot${i === 0 ? " on" : ""}" data-act="goslide" data-i="${i}" aria-label="Slide ${i + 1}"></button>`).join("")}</div></div>
+  </section>`;
+
+  const stats = `<div class="statband"><div class="wrap grid g4">
+    <div><b>${db.stats.students}</b><span>${t("Students")}</span></div><div><b>${db.books.length}</b><span>${t("Books in catalogue")}</span></div>
+    <div><b>${db.ebooks.length}</b><span>${t("Digital resources")}</span></div><div><b>${PROGRAMMES.length}</b><span>${t("Programmes offered")}</span></div></div></div>`;
+
+  const programmes = `<section class="sec"><div class="wrap">
+    <div class="sechead"><div><h2>${t("Explore Our Programmes")}</h2><p>${lang === "sw" ? "Chagua programu inayokufaa na jisajili mtandaoni." : "Pick the programme that fits you and register online."}</p></div><a class="btn" href="#/register">${t("Apply Now")}</a></div>
+    <div class="grid g3">${PROGRAMMES.slice(0, 3).map(progCard).join("")}</div>
+    <p style="margin-top:1.4rem"><a class="btn ghost" href="#/programmes">${t("View All")}</a></p></div></section>`;
+
+  const cats = `<section class="sec alt"><div class="wrap">
+    <div class="sechead"><h2>${lang === "sw" ? "Mifumo mitatu inayoendesha chuo" : "Three systems that run the college"}</h2></div>
+    <div class="grid g3 cats">
+      <div class="item"><h3>${t("Online Catalogue (OPAC)")}</h3><p>${lang === "sw" ? "Tafuta vitabu kwa jina, mwandishi au mada na ujue kama vipo kwenye rafu." : "Search books by title, author or subject and see whether a copy is on the shelf."}</p></div>
+      <div class="item"><h3>${t("E-Library")}</h3><p>${lang === "sw" ? "Vitabu vya kidijitali vinavyopakiwa na wasimamizi na kusomwa na wanafunzi waliojisajili." : "Softcopy books uploaded by administrators and read by signed-in students."}</p></div>
+      <div class="item"><h3>${lang === "sw" ? "Mfumo wa Usimamizi wa Chuo" : "College Management System"}</h3><p>${lang === "sw" ? "Kumbukumbu za wanafunzi, ufuatiliaji wa matokeo na ripoti za moja kwa moja." : "Student records, academic tracking and automatic reports in one place."}</p></div>
+    </div></div></section>`;
+
+  const vmm = `<section class="sec vmm"><div class="wrap grid g3">
+    <div><h3>${t("Vision")}</h3><p>${lang === "sw" ? "Kuwa chuo kinachotumia maarifa ya kidijitali kuboresha elimu kwa kila mwanafunzi." : "To be a college where digital knowledge improves learning for every student."}</p></div>
+    <div><h3>${t("Mission")}</h3><p>${lang === "sw" ? "Kutoa huduma za maktaba na usimamizi zinazopatikana kwa urahisi, kwa usalama na kwa ufanisi." : "To provide library and management services that are easy to reach, secure and efficient."}</p></div>
+    <div><h3>${t("Motto")}</h3><p>${lang === "sw" ? "Maarifa kwa wote." : "Knowledge within everyone's reach."}</p></div></div></section>`;
+
+  const about = `<section class="sec"><div class="wrap about-split">
+    <img src="${img("laptop", 1100)}" alt="Student working on a laptop" loading="lazy">
+    <div><h2>${lang === "sw" ? "Chuo kinachoenda na wakati" : "A college that moves with the times"}</h2>
+      <p>${lang === "sw" ? "St Joseph's College imeweka mifumo ya kisasa ya maktaba na usimamizi ili wanafunzi na wafanyakazi wapate taarifa kwa haraka na kazi za ofisi zifanyike kwa usahihi." : "St Joseph's College has set up modern library and management systems so that students and staff reach information quickly and administrative work is done accurately."}</p>
+      <ul class="ticks"><li>${lang === "sw" ? "Kumbukumbu salama za wanafunzi" : "Secure student records"}</li><li>${lang === "sw" ? "Upotevu mdogo wa vitabu kupitia ufuatiliaji wa mikopo" : "Fewer lost books through loan tracking"}</li><li>${lang === "sw" ? "Ripoti zinazotengenezwa moja kwa moja" : "Reports generated automatically"}</li></ul>
+      <a class="btn" href="#/library">${t("Read More")}</a></div></div></section>`;
+
+  const events = `<section class="sec alt"><div class="wrap grid g2">
+    <div><div class="sechead"><h2>${t("Events")}</h2></div>
+      ${[["2026-10-12","Orientation for new students"],["2026-10-19","Library tour and catalogue training"],["2026-11-02","First semester teaching begins"]].map(e => `<div class="listrow"><div class="datebox"><b>${new Date(e[0]).getDate()}</b><span>${new Date(e[0]).toLocaleString("en-GB", { month: "short" })}</span></div><div><strong>${e[1]}</strong><br><small style="color:var(--muted)">${fmt(e[0])}</small></div></div>`).join("")}</div>
+    <div><div class="sechead"><h2>${t("Announcements")}</h2></div>
+      ${[["2026-09-28","Registration for the new intake is open online."],["2026-09-25","Students must sign in to read items in the E-Library."],["2026-09-20","Borrowed books are due back after 14 days."]].map(e => `<div class="listrow"><div class="datebox"><b>${new Date(e[0]).getDate()}</b><span>${new Date(e[0]).toLocaleString("en-GB", { month: "short" })}</span></div><div>${e[1]}</div></div>`).join("")}</div>
+  </div></section>`;
+
+  const news = `<section class="sec"><div class="wrap">
+    <div class="sechead"><h2>${t("Latest News")}</h2><a class="btn ghost" href="#/news">${t("View All")}</a></div>
+    <div class="grid g4">${NEWS.map(newsCard).join("")}</div></div></section>`;
+
+  const fac = `<section class="sec alt"><div class="wrap">
+    <div class="sechead"><h2>${t("Our Facilities")}</h2></div>
+    <div class="grid g4">
+      ${[["lib","Library and reading hall","Shelves, study tables and a catalogue desk"],["laptop","Digital reading room","Computers for the OPAC and E-Library"],["reading","Quiet research corner","Space for individual study"],["hall","Graduation hall","Ceremonies and college events"]].map(f => `<div class="fac"><img src="${img(f[0], 800)}" alt="" loading="lazy"><div><h4>${f[1]}</h4><span>${f[2]}</span></div></div>`).join("")}
+    </div></div></section>`;
+
+  return hero + stats + programmes + cats + vmm + about + events + news + fac + faqSection() + contactSection();
+}
+
+function progCard(p) {
+  return `<article class="card"><div class="ph"><img src="${img(p.img, 800)}" alt="" loading="lazy"></div><div class="bd">
+    <span class="tag">${p.level} &middot; ${p.years} ${p.years > 1 ? "years" : "year"}</span><h3>${esc(p.name)}</h3><p>${esc(p.blurb)}</p>
+    <a class="more" href="#/register?p=${p.code}">${t("Apply Now")}</a></div></article>`;
+}
+function newsCard(n) {
+  return `<article class="card"><div class="newsimg"><img src="${img(n.img, 700)}" alt="" loading="lazy"></div><div class="bd"><small style="color:var(--muted)">${fmt(n.date)}</small><h4 style="margin-top:.3rem">${esc(n.title)}</h4><p>${esc(n.text)}</p></div></article>`;
+}
+
+const FAQS = [
+  ["How do I register as a student?", "Open the Register page, fill in the form, choose a programme and create a password. You receive an admission number immediately and the college confirms your registration."],
+  ["How do I find a book in the library?", "Use the Online Catalogue (OPAC). Search by title, author or subject. The result shows whether a copy is available or on loan."],
+  ["Who can read E-Library items?", "Registered students and staff. Sign in with the email and password used during registration."],
+  ["How long can I keep a borrowed book?", "Books are issued for 14 days. Return them to the library desk on or before the due date."],
+  ["How do I contact the college?", "Use the contact form on this site or reach us at " + SITE.email + " or " + SITE.phone + "."]
+];
+function faqSection() {
+  return `<section class="sec"><div class="wrap"><div class="sechead"><h2>${t("Get Answers to Some of Your Questions")}</h2></div>
+    <div style="max-width:860px">${FAQS.map(f => `<details class="faq"><summary>${esc(f[0])}</summary><p>${esc(f[1])}</p></details>`).join("")}</div></div></section>`;
+}
+function contactSection() {
+  return `<section class="sec alt" id="contact"><div class="wrap formsplit">
+    <div class="panel"><h2>${t("Contact Us")}</h2>
+      <form data-form="contact" class="fgrid">
+        ${fld(t("Subject"), "subject", { required: true, full: true })}
+        ${fld(t("Your name"), "name", { required: true })}${fld(t("Email address"), "email", { type: "email", required: true })}
+        ${fld(t("Phone number"), "phone", { full: true })}
+        ${fld(t("Message"), "message", { textarea: true, required: true, full: true })}
+        <div class="full"><button class="btn">${t("Send message")}</button></div>
+      </form></div>
+    <div><h3>${esc(SITE.name)}</h3><p>${esc(SITE.address)}</p><p>${esc(SITE.phone)}<br><a href="mailto:${esc(SITE.email)}">${esc(SITE.email)}</a></p>
+      <div class="side-img" style="aspect-ratio:4/3"><img src="${img("lib", 900)}" alt="Library shelves" loading="lazy"></div></div>
+  </div></section>`;
+}
+
+function pageAbout() {
+  return pageHead("About the college", "Who we are and what we work towards") + `<section class="sec"><div class="wrap about-split">
+    <div><h2>St Joseph's College</h2>
+      <p>St Joseph's College is introducing a set of integrated digital systems: an Online Public Access Catalogue (OPAC), an E-Library and a College Management Support System. Together they make books easy to find, learning material easy to reach, and student records easy to manage.</p>
+      <p>The aim is a smooth move to a digital academic environment for staff and students, with better access to information and more efficient daily operations.</p>
+      <ul class="ticks"><li>Online catalogue for all library resources</li><li>E-Library with secure sign-in</li><li>Student database and academic tracking</li><li>Automatic reports for administrators</li></ul>
+      <a class="btn" href="#/library">See the systems</a></div>
+    <img src="${img("grad", 1100)}" alt="A graduate celebrating at sunset" loading="lazy"></div></section>
+    <section class="sec vmm"><div class="wrap grid g3">
+      <div><h3>Vision</h3><p>To be a college where digital knowledge improves learning for every student.</p></div>
+      <div><h3>Mission</h3><p>To provide library and management services that are easy to reach, secure and efficient.</p></div>
+      <div><h3>Motto</h3><p>Knowledge within everyone's reach.</p></div></div></section>` + faqSection();
+}
+
+function pageProgrammes() {
+  return pageHead(t("Programmes"), "Certificate and diploma courses") + `<section class="sec"><div class="wrap">
+    <div class="grid g3">${PROGRAMMES.map(progCard).join("")}</div></div></section>`;
+}
+
+function pageLibrary() {
+  const mods = [
+    ["Installation", "Setup of the library and management systems for the whole college."],
+    ["Accessibility", "Information that students and staff can reach quickly from any device."],
+    ["Management", "Stronger administration through student records, results and reports."],
+    ["Digitization", "Books and documents kept as softcopy in the E-Library."]
+  ];
+  return pageHead("Library & E-Library", "Find it, read it, borrow it") + `<section class="sec"><div class="wrap">
+    <div class="grid g2" style="margin-bottom:2.4rem">
+      <article class="card"><div class="ph"><img src="${img("lib", 900)}" alt="" loading="lazy"></div><div class="bd"><h3>${t("Online Catalogue (OPAC)")}</h3><p>Search every book in the library by title, author, subject or call number. See at once whether a copy is available.</p><a class="btn" href="#/opac" style="align-self:flex-start">${t("Find a book")}</a></div></article>
+      <article class="card"><div class="ph"><img src="${img("laptop", 900)}" alt="" loading="lazy"></div><div class="bd"><h3>${t("E-Library")}</h3><p>Read softcopy books and guides uploaded by the library. Access is protected by a personal account.</p><a class="btn" href="#/elibrary" style="align-self:flex-start">Open the E-Library</a></div></article>
+    </div>
+    <div class="sechead"><h2>What the systems give the college</h2></div>
+    <div class="grid g4">${mods.map(m => `<div class="panel"><h4>${m[0]}</h4><p style="color:var(--muted);margin:0">${m[1]}</p></div>`).join("")}</div>
+  </div></section>`;
+}
+
+function pageOpac() {
+  const cats = [...new Set(db.books.map(b => b.category))].sort();
+  return pageHead(t("Online Catalogue (OPAC)"), "Search the library collection") + `<section class="sec"><div class="wrap">
+    <div class="searchbar" role="search">
+      <input id="opacq" type="search" placeholder="Title, author or call number" aria-label="Search the catalogue" data-live="opac" style="padding:.7rem .9rem;border:1px solid #c5cddd;border-radius:6px;font:inherit">
+      <select id="opaccat" data-live="opac" aria-label="Subject" style="padding:.7rem .9rem;border:1px solid #c5cddd;border-radius:6px;font:inherit"><option value="">All subjects</option>${cats.map(c => `<option>${esc(c)}</option>`).join("")}</select>
+    </div>
+    <div id="opacres">${opacList("", "")}</div></div></section>`;
+}
+function bookAvail(b) {
+  const out = b.out || 0; // counted on the server so it is correct for every visitor
+  return { out, left: Math.max(0, b.copies - out) };
+}
+function opacList(q, cat) {
+  q = q.toLowerCase();
+  const r = db.books.filter(b => (!cat || b.category === cat) && (!q || [b.title, b.author, b.call, b.category].join(" ").toLowerCase().includes(q)));
+  if (!r.length) return `<div class="empty">No books match your search. Try a different word or choose All subjects.</div>`;
+  return `<p style="color:var(--muted)">${r.length} ${r.length === 1 ? "result" : "results"}</p>` + r.map(b => {
+    const a = bookAvail(b);
+    return `<div class="res"><div><h4>${esc(b.title)}</h4><small>${esc(b.author)} &middot; ${esc(b.category)} &middot; Call no. ${esc(b.call)}</small></div>
+      <span class="badge ${a.left ? "ok" : "bad"}">${a.left ? `${t("Available")} (${a.left} of ${b.copies})` : t("On loan")}</span></div>`;
+  }).join("");
+}
+
+function pageElibrary() {
+  const u = me();
+  const items = db.ebooks.map(e => `<div class="res"><div><h4>${esc(e.title)}</h4><small>${esc(e.author)} &middot; ${esc(e.category)} &middot; ${esc(e.format)} &middot; added ${fmt(e.added)}</small></div>
+    ${u ? (e.hasFile ? `<a class="btn sm" href="/api/ebooks/${e.id}/file" download="${esc(e.fileName || e.title)}" target="_blank" rel="noopener">Read / download</a>` : `<span class="badge gray">File not uploaded yet</span>`)
+        : `<a class="btn sm ghost" href="#/login">Sign in to read</a>`}</div>`).join("");
+  return pageHead(t("E-Library"), "Softcopy books and study guides") + `<section class="sec"><div class="wrap">
+    ${u ? "" : `<div class="note" style="margin-bottom:1.2rem">You can browse the titles below. Sign in with your student account to read or download them.</div>`}
+    ${items || `<div class="empty">No digital resources have been added yet.</div>`}</div></section>`;
+}
+
+function pageNews() {
+  return pageHead(t("News & Events"), "What is happening at the college") + `<section class="sec"><div class="wrap"><div class="grid g4">${NEWS.map(newsCard).join("")}</div></div></section>` + `<section class="sec alt"><div class="wrap">${faqSection().replace(/<section[^>]*>|<\/section>/g, "")}</div></section>`;
+}
+function pageContact() { return pageHead(t("Contact Us"), "We are glad to hear from you") + contactSection(); }
+function pageFaqs() { return pageHead(t("FAQs"), "") + faqSection(); }
+
+function pageRegister() {
+  const q = new URLSearchParams((location.hash.split("?")[1]) || "");
+  const sel = q.get("p") || "";
+  const regions = ["Arusha","Dar es Salaam","Dodoma","Geita","Iringa","Kagera","Katavi","Kigoma","Kilimanjaro","Lindi","Manyara","Mara","Mbeya","Morogoro","Mtwara","Mwanza","Njombe","Pwani","Rukwa","Ruvuma","Shinyanga","Simiyu","Singida","Songwe","Tabora","Tanga","Zanzibar"];
+  return pageHead(t("Student Registration"), t("Create your student account")) + `<section class="sec"><div class="wrap formsplit">
+    <div class="panel" id="regpanel">
+      <form data-form="register">
+        <fieldset><legend>Personal details</legend><div class="fgrid">
+          ${fld(t("First name"), "first", { required: true, autocomplete: "given-name" })}${fld(t("Last name"), "last", { required: true, autocomplete: "family-name" })}
+          ${fld(t("Middle name"), "middle")}${fld(t("Gender"), "gender", { required: true, options: [["Male", t("Male")], ["Female", t("Female")]], placeholder: "Select" })}
+          ${fld(t("Date of birth"), "dob", { type: "date", required: true, max: today() })}${fld(t("Region"), "region", { required: true, options: regions, placeholder: "Select region" })}
+          ${fld(t("Postal address"), "address", { required: true, full: true, hint: "P.O. Box, town or city" })}
+        </div></fieldset>
+        <fieldset><legend>Programme</legend><div class="fgrid">
+          ${fld(t("Programme"), "programme", { required: true, value: sel, options: PROGRAMMES.map(p => [p.code, p.name]), placeholder: "Select programme" })}
+          ${fld("Year of study", "year", { required: true, value: "1", options: [["1", "Year 1"], ["2", "Year 2"]] })}
+          ${fld("Previous school or college", "prevSchool", { full: true })}
+        </div></fieldset>
+        <fieldset><legend>Contact and guardian</legend><div class="fgrid">
+          ${fld(t("Phone number"), "phone", { type: "tel", required: true, autocomplete: "tel", hint: "Example: +255 7XX XXX XXX" })}${fld(t("Email"), "email", { type: "email", required: true, autocomplete: "email" })}
+          ${fld("Guardian name", "guardian")}${fld("Guardian phone", "guardianPhone", { type: "tel" })}
+        </div></fieldset>
+        <fieldset><legend>Account</legend><div class="fgrid">
+          ${fld(t("Password"), "password", { type: "password", required: true, minlength: 8, autocomplete: "new-password", hint: "At least 8 characters" })}
+          ${fld("Confirm password", "password2", { type: "password", required: true, minlength: 8, autocomplete: "new-password" })}
+        </div></fieldset>
+        <button class="btn gold">${t("Submit registration")}</button>
+      </form></div>
+    <aside><div class="side-img"><img src="${img("smile", 900)}" alt="A smiling graduate" loading="lazy"></div>
+      <h3 style="margin-top:1.2rem">What happens next</h3>
+      <ol class="steps"><li>You receive an admission number as soon as you submit.</li><li>The college office reviews and confirms your registration.</li><li>Sign in with your email and password to see your profile, results and the E-Library.</li></ol></aside>
+  </div></section>`;
+}
+
+function pageLogin() {
+  return `<div class="loginwrap"><div class="loginbox"><div class="panel">
+    <a class="brand" href="#/home" style="margin-bottom:1rem">${LOGO}<span><b>${esc(SITE.name)}</b><small>Sign in to your account</small></span></a>
+    <form data-form="login">
+      ${fld(t("Email address"), "email", { type: "email", required: true, autocomplete: "username" })}<div style="height:.9rem"></div>
+      ${fld(t("Password"), "password", { type: "password", required: true, autocomplete: "current-password" })}
+      <p id="loginerr" role="alert" style="color:var(--bad);min-height:1.4em;margin:.7rem 0 .2rem;font-size:.9rem"></p>
+      <button class="btn" style="width:100%">${t("Sign in")}</button>
+    </form>
+    <p style="margin:1rem 0 0;font-size:.9rem">New student? <a href="#/register">${t("Register")}</a> &middot; <a href="#/home">Back to site</a></p>
+  </div>
+  </div></div>`;
+}
+
+/* =========================================================
+   Dashboard
+   ========================================================= */
+const ADMIN_NAV = [
+  ["overview","Overview","home"],["students","Students","users"],["academics","Academic records","chart"],
+  ["books","Library catalogue","book"],["loans","Loans and returns","swap"],["ebooks","E-Library uploads","cloud"],
+  ["reports","Reports","file"],["enquiries","Enquiries","mail"],["settings","Settings","gear"]
+];
+const STUDENT_NAV = [["profile","My profile","user"],["results","My results","chart"],["myloans","My loans","swap"],["myebooks","E-Library","cloud"]];
+
+function dashShell(sec, inner, nav, title, u) {
+  return `<div class="dash">
+    <aside class="side" id="side"><a class="brand" href="#/home">${LOGO}<span><b>${esc(SITE.short)} Portal</b><small>${esc(SITE.name)}</small></span></a>
+      <nav aria-label="Dashboard">
+        ${nav.map(n => `<a href="#/dashboard/${n[0]}" class="${sec === n[0] ? "on" : ""}">${IC[n[2]]}${n[1]}</a>`).join("")}
+        <div class="grp">Site</div><a href="#/home">${IC.home}Public website</a><a href="#/opac">${IC.book}Catalogue (OPAC)</a>
+      </nav></aside>
+    <div class="dmain"><div class="dtop"><button class="dburger" data-act="dburger" aria-label="Open menu">Menu</button><h2>${title}</h2><span class="sp"></span>
+      <div class="who"><strong>${esc(u.name || u.email)}</strong><br><small>${u.role === "admin" ? "Administrator" : "Student"}</small></div>
+      <button class="btn ghost sm" data-act="logout">${t("Log out")}</button></div>
+    <div class="dbody" id="dbody">${inner}</div></div></div>`;
+}
+
+function pageDashboard(sec) {
+  const u = me();
+  if (!u) { location.hash = "#/login"; return ""; }
+  if (u.role === "admin") {
+    sec = ADMIN_NAV.find(n => n[0] === sec) ? sec : "overview";
+    const fn = { overview: dOverview, students: dStudents, academics: dAcademics, books: dBooks, loans: dLoans, ebooks: dEbooks, reports: dReports, enquiries: dEnquiries, settings: dSettings }[sec];
+    return dashShell(sec, fn(), ADMIN_NAV, ADMIN_NAV.find(n => n[0] === sec)[1], u);
+  }
+  sec = STUDENT_NAV.find(n => n[0] === sec) ? sec : "profile";
+  const fn = { profile: sProfile, results: sResults, myloans: sLoans, myebooks: sEbooks }[sec];
+  return dashShell(sec, fn(u), STUDENT_NAV, STUDENT_NAV.find(n => n[0] === sec)[1], u);
+}
+
+const badge = s => `<span class="badge ${s === "Active" ? "ok" : s === "Pending" ? "warn" : s === "Suspended" ? "bad" : "gray"}">${esc(s)}</span>`;
+const stu = id => db.students.find(s => s.id === id);
+const book = id => db.books.find(b => b.id === id);
+
+function dOverview() {
+  const overdue = db.loans.filter(l => !l.returned && l.due < today());
+  const pending = db.students.filter(s => s.status === "Pending");
+  const out = db.loans.filter(l => !l.returned).length;
+  const counts = PROGRAMMES.map(p => [p.name.replace(/^(Certificate|Diploma) in /, ""), db.students.filter(s => s.programme === p.code).length]);
+  const max = Math.max(1, ...counts.map(c => c[1]));
+  const recent = [...db.students].sort((a, b) => b.registered.localeCompare(a.registered)).slice(0, 5);
+  return `<div class="stats">
+    <div class="stat"><b>${db.students.length}</b><span>Students registered</span></div>
+    <div class="stat g"><b>${pending.length}</b><span>Waiting for approval</span></div>
+    <div class="stat o"><b>${db.books.length}</b><span>Books in catalogue</span></div>
+    <div class="stat"><b>${out}</b><span>Books on loan</span></div>
+    <div class="stat r"><b>${overdue.length}</b><span>Overdue returns</span></div>
+    <div class="stat g"><b>${db.ebooks.length}</b><span>E-Library items</span></div></div>
+  <div class="dgrid">
+    <div class="panel"><h3>Students by programme</h3><div class="bars">${counts.map(c => `<div class="row"><span>${esc(c[0])}</span><span class="track"><span class="fill" style="width:${c[1] / max * 100}%"></span></span><b>${c[1]}</b></div>`).join("")}</div></div>
+    <div class="panel"><h3>Recent registrations</h3>${recent.length ? recent.map(s => `<div class="listrow" style="padding:.6rem 0"><div style="flex:1"><strong>${esc(fullName(s))}</strong><br><small style="color:var(--muted)">${esc(s.adm)} &middot; ${fmt(s.registered)}</small></div>${badge(s.status)}</div>`).join("") : `<div class="empty">No registrations yet.</div>`}
+      <p style="margin:1rem 0 0"><a class="btn sm" href="#/dashboard/students">Manage students</a></p></div>
+  </div>
+  ${overdue.length ? `<div class="panel" style="margin-top:1.2rem"><h3>Overdue returns</h3>${overdue.map(l => `<div class="listrow" style="padding:.55rem 0"><div style="flex:1"><strong>${esc(book(l.bookId)?.title)}</strong><br><small style="color:var(--muted)">${esc(fullName(stu(l.studentId) || {}))} &middot; due ${fmt(l.due)}</small></div><span class="badge bad">Overdue</span></div>`).join("")}</div>` : ""}`;
+}
+
+function dStudents() {
+  const rows = db.students.map(s => `<tr data-s="${esc((fullName(s) + " " + s.adm + " " + s.email + " " + s.programme + " " + s.status).toLowerCase())}">
+    <td>${esc(s.adm)}</td><td><strong>${esc(fullName(s))}</strong><br><small style="color:var(--muted)">${esc(s.email)}</small></td><td>${esc(prog(s.programme)?.name || s.programme)}</td><td>Year ${esc(s.year)}</td><td>${badge(s.status)}</td>
+    <td><div class="acts">${s.status === "Pending" ? `<button class="btn sm" data-act="approve" data-id="${s.id}">Approve</button>` : ""}<button class="btn sm ghost" data-act="viewStudent" data-id="${s.id}">View</button><button class="btn sm ghost" data-act="editStudent" data-id="${s.id}">Edit</button><button class="btn sm danger" data-act="delStudent" data-id="${s.id}">Delete</button></div></td></tr>`).join("");
+  return `<div class="tools"><input type="search" placeholder="Search by name, admission number or email" aria-label="Search students" data-rows="#stbody">
+    <select data-rowsel="#stbody" aria-label="Filter by status"><option value="">All statuses</option><option>active</option><option>pending</option><option>suspended</option><option>graduated</option></select>
+    <span class="sp"></span><button class="btn ghost sm" data-act="exportStudents">Download CSV</button><button class="btn sm" data-act="addStudent">Add student</button></div>
+  <div class="tw"><table><thead><tr><th>Admission no.</th><th>Student</th><th>Programme</th><th>Year</th><th>Status</th><th>Actions</th></tr></thead><tbody id="stbody">${rows}</tbody></table>${db.students.length ? "" : `<div class="empty">No students yet. Add a student or wait for online registrations.</div>`}</div>`;
+}
+
+function studentFormBody(s = {}) {
+  return `<div class="fgrid">
+    ${fld("First name", "first", { required: true, value: s.first })}${fld("Last name", "last", { required: true, value: s.last })}
+    ${fld("Middle name", "middle", { value: s.middle })}${fld("Gender", "gender", { required: true, value: s.gender, options: ["Male", "Female"], placeholder: "Select" })}
+    ${fld("Date of birth", "dob", { type: "date", required: true, value: s.dob })}${fld("Region", "region", { value: s.region })}
+    ${fld("Phone", "phone", { type: "tel", required: true, value: s.phone })}${fld("Email", "email", { type: "email", required: true, value: s.email })}
+    ${fld("Postal address", "address", { value: s.address, full: true })}
+    ${fld("Programme", "programme", { required: true, value: s.programme, options: PROGRAMMES.map(p => [p.code, p.name]), placeholder: "Select" })}${fld("Year", "year", { value: s.year || "1", options: [["1", "Year 1"], ["2", "Year 2"]] })}
+    ${fld("Guardian name", "guardian", { value: s.guardian })}${fld("Guardian phone", "guardianPhone", { type: "tel", value: s.guardianPhone })}
+    ${fld("Previous school", "prevSchool", { value: s.prevSchool, full: true })}
+    ${fld("Status", "status", { value: s.status || "Active", options: ["Pending", "Active", "Suspended", "Graduated"] })}</div>`;
+}
+
+function dAcademics() {
+  const sorted = [...db.grades].reverse();
+  const rows = sorted.map(g => { const s = stu(g.studentId); return `<tr data-s="${esc(((s ? fullName(s) : "") + " " + g.course + " " + g.term).toLowerCase())}"><td>${esc(s ? fullName(s) : "Removed student")}</td><td>${esc(g.course)}</td><td>${esc(g.term)}</td><td>${g.score}</td><td><span class="badge ${g.score >= 40 ? "ok" : "bad"}">${gradeLetter(g.score)}</span></td><td><div class="acts"><button class="btn sm ghost" data-act="editGrade" data-id="${g.id}">Edit</button><button class="btn sm danger" data-act="delGrade" data-id="${g.id}">Delete</button></div></td></tr>`; }).join("");
+  const avgs = db.students.map(s => { const g = db.grades.filter(x => x.studentId === s.id); return { s, n: g.length, avg: g.length ? g.reduce((a, b) => a + b.score, 0) / g.length : null }; }).filter(x => x.n).sort((a, b) => b.avg - a.avg);
+  return `<div class="dgrid"><div>
+    <div class="tools"><input type="search" placeholder="Search by student, course or term" aria-label="Search results" data-rows="#grbody"><span class="sp"></span><button class="btn sm" data-act="addGrade">Record a result</button></div>
+    <div class="tw"><table><thead><tr><th>Student</th><th>Course</th><th>Term</th><th>Score</th><th>Grade</th><th>Actions</th></tr></thead><tbody id="grbody">${rows}</tbody></table>${rows ? "" : `<div class="empty">No results recorded yet.</div>`}</div></div>
+    <div class="panel"><h3>Average score by student</h3><div class="bars">${avgs.map(a => `<div class="row"><span>${esc(a.s.first + " " + a.s.last)}</span><span class="track"><span class="fill" style="width:${a.avg}%;background:${a.avg >= 40 ? "var(--blue)" : "var(--bad)"}"></span></span><b>${Math.round(a.avg)}</b></div>`).join("") || `<div class="empty">No data yet.</div>`}</div>
+    <p style="color:var(--muted);font-size:.85rem;margin:.8rem 0 0">Grades: A 70+, B 60+, C 50+, D 40+, F below 40.</p></div></div>`;
+}
+function gradeFormBody(g = {}) {
+  const studs = db.students.filter(s => s.status !== "Pending");
+  const sid = g.studentId || (studs[0] && studs[0].id);
+  const courses = [...new Set(PROGRAMMES.flatMap(p => p.courses))];
+  return `<div class="fgrid">${fld("Student", "studentId", { required: true, value: sid, options: studs.map(s => [s.id, `${fullName(s)} (${s.adm})`]), full: true })}
+    ${fld("Course", "course", { required: true, value: g.course, options: courses, placeholder: "Select course", full: true })}
+    ${fld("Term", "term", { value: g.term || "Semester 1", options: ["Semester 1", "Semester 2"] })}${fld("Score (0 to 100)", "score", { type: "number", min: 0, max: 100, required: true, value: g.score })}</div>`;
+}
+
+function dBooks() {
+  const rows = db.books.map(b => { const a = bookAvail(b); return `<tr data-s="${esc((b.title + " " + b.author + " " + b.category + " " + b.call).toLowerCase())}"><td><strong>${esc(b.title)}</strong><br><small style="color:var(--muted)">${esc(b.author)}</small></td><td>${esc(b.category)}</td><td>${esc(b.call)}</td><td>${a.left} of ${b.copies}</td><td><div class="acts"><button class="btn sm ghost" data-act="editBook" data-id="${b.id}">Edit</button><button class="btn sm danger" data-act="delBook" data-id="${b.id}">Delete</button></div></td></tr>`; }).join("");
+  return `<div class="tools"><input type="search" placeholder="Search title, author or call number" aria-label="Search books" data-rows="#bkbody"><span class="sp"></span><button class="btn ghost sm" data-act="exportBooks">Download CSV</button><button class="btn sm" data-act="addBook">Add book</button></div>
+  <div class="tw"><table><thead><tr><th>Title</th><th>Subject</th><th>Call no.</th><th>Available</th><th>Actions</th></tr></thead><tbody id="bkbody">${rows}</tbody></table>${rows ? "" : `<div class="empty">The catalogue is empty. Add the first book.</div>`}</div>`;
+}
+function bookFormBody(b = {}) {
+  return `<div class="fgrid">${fld("Title", "title", { required: true, value: b.title, full: true })}${fld("Author", "author", { required: true, value: b.author })}${fld("Subject", "category", { required: true, value: b.category, hint: "Example: Literature, Business" })}
+    ${fld("Call number", "call", { value: b.call })}${fld("Copies", "copies", { type: "number", min: 1, required: true, value: b.copies || 1 })}</div>`;
+}
+
+function dLoans() {
+  const rows = [...db.loans].reverse().map(l => { const s = stu(l.studentId), b = book(l.bookId); const od = !l.returned && l.due < today();
+    return `<tr data-s="${esc(((s ? fullName(s) : "") + " " + (b ? b.title : "")).toLowerCase())}"><td>${esc(b ? b.title : "Removed book")}</td><td>${esc(s ? fullName(s) : "Removed student")}</td><td>${fmt(l.issued)}</td><td>${fmt(l.due)}</td>
+    <td>${l.returned ? `<span class="badge gray">Returned ${fmt(l.returned)}</span>` : od ? `<span class="badge bad">Overdue</span>` : `<span class="badge warn">On loan</span>`}</td>
+    <td>${l.returned ? "" : `<button class="btn sm" data-act="returnLoan" data-id="${l.id}">Mark returned</button>`}</td></tr>`; }).join("");
+  return `<div class="tools"><input type="search" placeholder="Search by book or student" aria-label="Search loans" data-rows="#lnbody"><span class="sp"></span><button class="btn sm" data-act="addLoan">Issue a book</button></div>
+  <div class="tw"><table><thead><tr><th>Book</th><th>Student</th><th>Issued</th><th>Due</th><th>Status</th><th></th></tr></thead><tbody id="lnbody">${rows}</tbody></table>${rows ? "" : `<div class="empty">No loans yet. Issue a book to a student.</div>`}</div>`;
+}
+
+function dEbooks() {
+  const rows = db.ebooks.map(e => `<tr><td><strong>${esc(e.title)}</strong><br><small style="color:var(--muted)">${esc(e.author)}</small></td><td>${esc(e.category)}</td><td>${esc(e.format)}</td><td>${fmt(e.added)}</td><td>${e.hasFile ? `<span class="badge ok">File attached</span>` : `<span class="badge gray">No file</span>`}</td>
+    <td><div class="acts"><button class="btn sm ghost" data-act="editEbook" data-id="${e.id}">Edit</button><button class="btn sm danger" data-act="delEbook" data-id="${e.id}">Delete</button></div></td></tr>`).join("");
+  return `<div class="tools"><span class="sp"></span><button class="btn sm" data-act="addEbook">Upload softcopy</button></div>
+  <div class="tw"><table><thead><tr><th>Title</th><th>Category</th><th>Format</th><th>Added</th><th>File</th><th>Actions</th></tr></thead><tbody>${rows}</tbody></table>${rows ? "" : `<div class="empty">No digital resources yet. Upload the first softcopy.</div>`}</div>
+  <p class="note" style="margin-top:1rem">Files are stored securely in Cloudflare R2 (up to 20 MB each). Only signed-in users can open them.</p>`;
+}
+function ebookFormBody(e = {}) {
+  return `<div class="fgrid">${fld("Title", "title", { required: true, value: e.title, full: true })}${fld("Author", "author", { required: true, value: e.author })}${fld("Category", "category", { required: true, value: e.category })}
+    ${fld("Format", "format", { value: e.format || "PDF", options: ["PDF", "EPUB", "DOCX", "Other"] })}
+    <div class="field full"><label>File${e.id ? " (leave empty to keep the current file)" : ""}</label><input type="file" name="file" accept=".pdf,.epub,.doc,.docx,.txt"><small>PDF, EPUB, DOC, DOCX or TXT. Up to 20 MB.</small></div></div>`;
+}
+
+const REPORTS = {
+  students: ["Student list", () => ({ cols: ["Admission no.", "Name", "Gender", "Programme", "Year", "Phone", "Email", "Status"], rows: db.students.map(s => [s.adm, fullName(s), s.gender, prog(s.programme)?.name || s.programme, s.year, s.phone, s.email, s.status]) })],
+  byprog: ["Enrolment by programme", () => ({ cols: ["Programme", "Active", "Pending", "Total"], rows: PROGRAMMES.map(p => { const l = db.students.filter(s => s.programme === p.code); return [p.name, l.filter(s => s.status === "Active").length, l.filter(s => s.status === "Pending").length, l.length]; }) })],
+  perf: ["Academic performance summary", () => ({ cols: ["Admission no.", "Name", "Programme", "Results", "Average", "Grade"], rows: db.students.map(s => { const g = db.grades.filter(x => x.studentId === s.id); const a = g.length ? g.reduce((x, y) => x + y.score, 0) / g.length : null; return [s.adm, fullName(s), prog(s.programme)?.name || s.programme, g.length, a == null ? "-" : a.toFixed(1), a == null ? "-" : gradeLetter(a)]; }) })],
+  inventory: ["Library inventory", () => ({ cols: ["Title", "Author", "Subject", "Call no.", "Copies", "On loan", "Available"], rows: db.books.map(b => { const a = bookAvail(b); return [b.title, b.author, b.category, b.call, b.copies, a.out, a.left]; }) })],
+  overdue: ["Overdue loans", () => ({ cols: ["Book", "Student", "Admission no.", "Issued", "Due", "Days late"], rows: db.loans.filter(l => !l.returned && l.due < today()).map(l => { const s = stu(l.studentId) || {}; return [book(l.bookId)?.title, fullName(s), s.adm, fmt(l.issued), fmt(l.due), Math.round((new Date(today()) - new Date(l.due)) / 864e5)]; }) })]
+};
+let curReport = "students";
+function dReports() {
+  const r = REPORTS[curReport][1]();
+  return `<div class="tools"><select id="repsel" data-act="repsel" aria-label="Report type">${Object.entries(REPORTS).map(([k, v]) => `<option value="${k}"${k === curReport ? " selected" : ""}>${v[0]}</option>`).join("")}</select><span class="sp"></span>
+    <button class="btn ghost sm" data-act="repcsv">Download CSV</button><button class="btn sm" data-act="repprint">Print</button></div>
+  <div id="printArea"><h3>${esc(SITE.name)}: ${REPORTS[curReport][0]}</h3><p style="color:var(--muted)">Generated ${fmt(today())}</p>
+  <div class="tw"><table><thead><tr>${r.cols.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${r.rows.map(x => `<tr>${x.map(c => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>${r.rows.length ? "" : `<div class="empty">Nothing to show for this report.</div>`}</div></div>`;
+}
+
+function dEnquiries() {
+  const m = [...db.messages].reverse();
+  return `<div class="panel"><h3>Messages from the contact form</h3>${m.length ? m.map(x => `<div class="listrow" style="display:block"><strong>${esc(x.subject)}</strong> <small style="color:var(--muted)">from ${esc(x.name)} (${esc(x.email)}${x.phone ? ", " + esc(x.phone) : ""}) on ${fmt(x.date)}</small><p style="margin:.3rem 0 0">${esc(x.message)}</p></div>`).join("") : `<div class="empty">No messages yet.</div>`}</div>
+  <div class="panel" style="margin-top:1.2rem"><h3>Mailing list (${db.subscribers.length})</h3>${db.subscribers.length ? `<p>${db.subscribers.map(s => esc(s.email)).join(", ")}</p>` : `<div class="empty">No subscribers yet.</div>`}</div>`;
+}
+
+function dSettings() {
+  return `<div class="dgrid"><div class="panel"><h3>Change your password</h3>
+    <form data-form="chpw" class="fgrid">${fld("Current password", "old", { type: "password", required: true, full: true })}${fld("New password", "pw", { type: "password", required: true, minlength: 8 })}${fld("Repeat new password", "pw2", { type: "password", required: true, minlength: 8 })}<div class="full"><button class="btn">Update password</button></div></form></div>
+    <div class="panel"><h3>Data</h3><p style="color:var(--muted)">All data is stored in Cloudflare D1 and R2.</p>
+      <p><button class="btn ghost sm" data-act="exportAll">Download a backup (JSON)</button></p></div></div>`;
+}
+
+/* student portal */
+function myStudent(u) { return db.students.find(s => s.id === u.studentId); }
+function sProfile(u) {
+  const s = myStudent(u);
+  if (!s) return `<div class="empty">No student record is linked to this account.</div>`;
+  return `<div class="dgrid"><div class="panel"><h3>${esc(fullName(s))}</h3><dl class="kv">
+    <dt>Admission number</dt><dd>${esc(s.adm)}</dd><dt>Status</dt><dd>${badge(s.status)}</dd><dt>Programme</dt><dd>${esc(prog(s.programme)?.name)}</dd><dt>Year</dt><dd>Year ${esc(s.year)}</dd>
+    <dt>Gender</dt><dd>${esc(s.gender)}</dd><dt>Date of birth</dt><dd>${fmt(s.dob)}</dd><dt>Phone</dt><dd>${esc(s.phone)}</dd><dt>Email</dt><dd>${esc(s.email)}</dd>
+    <dt>Address</dt><dd>${esc(s.address)}${s.region ? ", " + esc(s.region) : ""}</dd><dt>Guardian</dt><dd>${esc(s.guardian || "-")} ${esc(s.guardianPhone || "")}</dd><dt>Registered</dt><dd>${fmt(s.registered)}</dd></dl></div>
+    <div class="panel"><h3>Quick links</h3><p><a class="btn sm" href="#/dashboard/results">My results</a></p><p><a class="btn sm ghost" href="#/dashboard/myebooks">E-Library</a></p><p><a class="btn sm ghost" href="#/opac">Search the catalogue</a></p>
+    ${s.status === "Pending" ? `<div class="note">Your registration is waiting for approval by the college office.</div>` : ""}</div></div>`;
+}
+function sResults(u) {
+  const s = myStudent(u); const g = s ? db.grades.filter(x => x.studentId === s.id) : [];
+  if (!g.length) return `<div class="empty">No results have been recorded for you yet.</div>`;
+  const avg = g.reduce((a, b) => a + b.score, 0) / g.length;
+  const terms = [...new Set(g.map(x => x.term))];
+  return `<div class="stats"><div class="stat"><b>${g.length}</b><span>Results recorded</span></div><div class="stat g"><b>${avg.toFixed(1)}</b><span>Average score</span></div><div class="stat o"><b>${gradeLetter(avg)}</b><span>Overall grade</span></div></div>
+  ${terms.map(tm => `<h3>${esc(tm)}</h3><div class="tw" style="margin-bottom:1.2rem"><table><thead><tr><th>Course</th><th>Score</th><th>Grade</th></tr></thead><tbody>${g.filter(x => x.term === tm).map(x => `<tr><td>${esc(x.course)}</td><td>${x.score}</td><td><span class="badge ${x.score >= 40 ? "ok" : "bad"}">${gradeLetter(x.score)}</span></td></tr>`).join("")}</tbody></table></div>`).join("")}`;
+}
+function sLoans(u) {
+  const l = db.loans.filter(x => x.studentId === u.studentId).reverse();
+  return l.length ? `<div class="tw"><table><thead><tr><th>Book</th><th>Issued</th><th>Due</th><th>Status</th></tr></thead><tbody>${l.map(x => `<tr><td>${esc(book(x.bookId)?.title)}</td><td>${fmt(x.issued)}</td><td>${fmt(x.due)}</td><td>${x.returned ? `<span class="badge gray">Returned</span>` : x.due < today() ? `<span class="badge bad">Overdue</span>` : `<span class="badge warn">On loan</span>`}</td></tr>`).join("")}</tbody></table></div>` : `<div class="empty">You have not borrowed any books. <a href="#/opac">Search the catalogue</a>.</div>`;
+}
+function sEbooks() { return db.ebooks.map(e => `<div class="res"><div><h4>${esc(e.title)}</h4><small>${esc(e.author)} &middot; ${esc(e.category)} &middot; ${esc(e.format)}</small></div>${e.hasFile ? `<a class="btn sm" href="/api/ebooks/${e.id}/file" download="${esc(e.fileName || e.title)}" target="_blank" rel="noopener">Read / download</a>` : `<span class="badge gray">File not uploaded yet</span>`}</div>`).join("") || `<div class="empty">No digital resources yet.</div>`; }
+
+/* =========================================================
+   Router + render
+   ========================================================= */
+let slideTimer = null, curSlide = 0;
+function render() {
+  clearInterval(slideTimer);
+  const raw = location.hash.replace(/^#\/?/, "") || "home";
+  const [pathPart] = raw.split("?");
+  const [p, sub] = pathPart.split("/");
+  const app = $("#app");
+  const titles = { home: "Home", about: "About", programmes: "Programmes", library: "Library", opac: "Online Catalogue", elibrary: "E-Library", news: "News and events", contact: "Contact", register: "Student registration", login: "Sign in", dashboard: "Portal", faqs: "FAQs" };
+  document.title = `${SITE.name} | ${titles[p] || "Home"}`;
+  document.documentElement.lang = lang === "sw" ? "sw" : "en";
+  const pub = (inner, a) => publicShell(inner, a);
+  let html;
+  switch (p) {
+    case "about": html = pub(pageAbout(), "about"); break;
+    case "programmes": html = pub(pageProgrammes(), "programmes"); break;
+    case "library": html = pub(pageLibrary(), "library"); break;
+    case "opac": html = pub(pageOpac(), "library"); break;
+    case "elibrary": html = pub(pageElibrary(), "library"); break;
+    case "news": html = pub(pageNews(), "news"); break;
+    case "contact": html = pub(pageContact(), "contact"); break;
+    case "faqs": html = pub(pageFaqs(), ""); break;
+    case "register": html = pub(pageRegister(), "programmes"); break;
+    case "login": html = me() ? (location.hash = "#/dashboard", "") : pub(pageLogin(), ""); break;
+    case "dashboard": html = pageDashboard(sub); break;
+    default: html = pub(pageHome(), "home");
+  }
+  app.innerHTML = html;
+  window.scrollTo(0, 0);
+  if ($(".hero")) { curSlide = 0; slideTimer = setInterval(() => goSlide(curSlide + 1), 6500); }
+}
+function goSlide(i) {
+  const s = $$(".slide"); if (!s.length) return;
+  curSlide = (i + s.length) % s.length;
+  s.forEach((x, k) => x.classList.toggle("on", k === curSlide));
+  $$(".dot").forEach((x, k) => x.classList.toggle("on", k === curSlide));
+}
+
+/* =========================================================
+   Events
+   ========================================================= */
+const actions = {
+  lang() { lang = lang === "sw" ? "en" : "sw"; store.set("sjc_lang", lang); render(); },
+  burger(el) { const n = $("#mainnav"); const o = n.classList.toggle("open"); el.setAttribute("aria-expanded", o); },
+  dburger() { const s = $("#side"); s.classList.toggle("open"); if (s.classList.contains("open")) { const sc = document.createElement("div"); sc.className = "scrim"; sc.dataset.act = "dburger"; sc.id = "scrim"; document.body.appendChild(sc); } else $("#scrim")?.remove(); },
+  slide(el) { goSlide(curSlide + Number(el.dataset.d)); clearInterval(slideTimer); },
+  goslide(el) { goSlide(Number(el.dataset.i)); clearInterval(slideTimer); },
+  async logout() { try { await api("/logout", { method: "POST" }); } catch (e) {} try { await refresh(); } catch (e) {} location.hash = "#/home"; render(); toast("You have signed out."); },
+  closeModal,
+  modalback(el, e) { if (e.target === el) closeModal(); },
+
+  addStudent() { modal("Add student", studentFormBody(), d => act(() => api("/students", { method: "POST", body: d }), "Student added.")); },
+  editStudent(el) { const s = stu(el.dataset.id); modal("Edit student", studentFormBody(s), d => act(() => api("/students/" + s.id, { method: "PUT", body: d }), "Student updated.")); },
+  viewStudent(el) {
+    const s = stu(el.dataset.id); const g = db.grades.filter(x => x.studentId === s.id);
+    const avg = g.length ? (g.reduce((a, b) => a + b.score, 0) / g.length).toFixed(1) : "-";
+    modal(fullName(s), `<dl class="kv"><dt>Admission number</dt><dd>${esc(s.adm)}</dd><dt>Status</dt><dd>${badge(s.status)}</dd><dt>Programme</dt><dd>${esc(prog(s.programme)?.name)} (Year ${esc(s.year)})</dd><dt>Gender</dt><dd>${esc(s.gender)}</dd><dt>Date of birth</dt><dd>${fmt(s.dob)}</dd><dt>Phone</dt><dd>${esc(s.phone)}</dd><dt>Email</dt><dd>${esc(s.email)}</dd><dt>Address</dt><dd>${esc(s.address)} ${esc(s.region)}</dd><dt>Guardian</dt><dd>${esc(s.guardian || "-")} ${esc(s.guardianPhone || "")}</dd><dt>Previous school</dt><dd>${esc(s.prevSchool || "-")}</dd><dt>Results</dt><dd>${g.length} recorded, average ${avg}</dd><dt>Registered</dt><dd>${fmt(s.registered)}</dd></dl>`, null);
+  },
+  approve(el) { act(() => api("/students/" + el.dataset.id + "/approve", { method: "POST" }), "Student approved."); },
+  delStudent(el) {
+    const s = stu(el.dataset.id);
+    modal("Delete student", `<p>Delete <strong>${esc(fullName(s))}</strong> (${esc(s.adm)})? Their results, loans and login will also be removed. This cannot be undone.</p>`,
+      () => act(() => api("/students/" + s.id, { method: "DELETE" }), "Student deleted."), "Delete");
+  },
+  exportStudents() { const r = REPORTS.students[1](); csv("students.csv", r.cols, r.rows); },
+
+  addGrade() { if (!db.students.some(s => s.status !== "Pending")) { toast("Approve at least one student first.", true); return; } modal("Record a result", gradeFormBody(), d => act(() => api("/grades", { method: "POST", body: d }), "Result recorded.")); },
+  editGrade(el) { const g = db.grades.find(x => x.id === el.dataset.id); modal("Edit result", gradeFormBody(g), d => act(() => api("/grades/" + g.id, { method: "PUT", body: d }), "Result updated.")); },
+  delGrade(el) { modal("Delete result", "<p>Delete this result? This cannot be undone.</p>", () => act(() => api("/grades/" + el.dataset.id, { method: "DELETE" }), "Result deleted."), "Delete"); },
+
+  addBook() { modal("Add book", bookFormBody(), d => act(() => api("/books", { method: "POST", body: d }), "Book added.")); },
+  editBook(el) { const b = book(el.dataset.id); modal("Edit book", bookFormBody(b), d => act(() => api("/books/" + b.id, { method: "PUT", body: d }), "Book updated.")); },
+  delBook(el) { const b = book(el.dataset.id); modal("Delete book", `<p>Delete <strong>${esc(b.title)}</strong> from the catalogue?</p>`, () => act(() => api("/books/" + b.id, { method: "DELETE" }), "Book deleted."), "Delete"); },
+  exportBooks() { const r = REPORTS.inventory[1](); csv("library-inventory.csv", r.cols, r.rows); },
+
+  addLoan() {
+    const avail = db.books.filter(b => bookAvail(b).left > 0), studs = db.students.filter(s => s.status === "Active");
+    if (!avail.length || !studs.length) { toast(!studs.length ? "There are no active students." : "No copies are available.", true); return; }
+    modal("Issue a book", `<div class="fgrid">${fld("Book", "bookId", { required: true, options: avail.map(b => [b.id, `${b.title} (${bookAvail(b).left} left)`]), full: true })}${fld("Student", "studentId", { required: true, options: studs.map(s => [s.id, `${fullName(s)} (${s.adm})`]), full: true })}${fld("Issue date", "issued", { type: "date", value: today(), required: true })}${fld("Loan period", "days", { value: "14", options: [["7", "7 days"], ["14", "14 days"], ["21", "21 days"]] })}</div>`,
+      d => act(() => api("/loans", { method: "POST", body: d }), "Book issued."), "Issue book");
+  },
+  returnLoan(el) { act(() => api("/loans/" + el.dataset.id + "/return", { method: "POST" }), "Book marked as returned."); },
+
+  addEbook() { modal("Upload softcopy", ebookFormBody(), saveEbook); },
+  editEbook(el) { const e = db.ebooks.find(x => x.id === el.dataset.id); modal("Edit digital resource", ebookFormBody(e), d => saveEbook(d, null, e)); },
+  delEbook(el) { modal("Delete resource", "<p>Delete this digital resource and its file?</p>", () => act(() => api("/ebooks/" + el.dataset.id, { method: "DELETE" }), "Resource deleted."), "Delete"); },
+
+  repsel(el) { curReport = el.value; render(); },
+  repcsv() { const r = REPORTS[curReport][1](); csv(curReport + "-report.csv", r.cols, r.rows); },
+  repprint() { window.print(); },
+  exportAll() {
+    const { students, grades, books, ebooks, loans, messages, subscribers } = db;
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([JSON.stringify({ students, grades, books, ebooks, loans, messages, subscribers }, null, 2)], { type: "application/json" }));
+    a.download = "sjc-backup.json"; a.click();
+  }
+};
+
+async function saveEbook(d, _f, existing) {
+  const file = $("#layer input[type=file]")?.files[0];
+  if (file && file.size > 20 * 1024 * 1024) { toast("The file is larger than 20 MB.", true); return false; }
+  const fd = new FormData();
+  ["title", "author", "category", "format"].forEach(k => fd.append(k, d[k] ?? ""));
+  if (file) fd.append("file", file);
+  return act(() => api(existing ? "/ebooks/" + existing.id : "/ebooks", { method: existing ? "PUT" : "POST", form: fd }), "Saved to the E-Library.");
+}
+
+document.addEventListener("click", e => {
+  const a = e.target.closest("[data-act]");
+  if (a && actions[a.dataset.act]) { if (a.tagName !== "SELECT") actions[a.dataset.act](a, e); }
+  const nl = e.target.closest("#mainnav a");
+  if (nl) $("#mainnav")?.classList.remove("open");
+  const sl = e.target.closest("#side a");
+  if (sl) { $("#side")?.classList.remove("open"); $("#scrim")?.remove(); }
+});
+document.addEventListener("change", e => {
+  const a = e.target.closest("select[data-act]");
+  if (a && actions[a.dataset.act]) actions[a.dataset.act](a, e);
+  if (e.target.matches("[data-rowsel]")) filterRows($(e.target.dataset.rowsel), $("[data-rows]")?.value || "", e.target.value);
+  if (e.target.matches("[data-live=opac]")) $("#opacres").innerHTML = opacList($("#opacq").value, $("#opaccat").value);
+});
+function filterRows(tb, q, st) {
+  if (!tb) return; q = (q || "").toLowerCase(); st = (st || "").toLowerCase();
+  [...tb.rows].forEach(r => { const s = r.dataset.s || r.textContent.toLowerCase(); r.hidden = !(s.includes(q) && (!st || s.includes(st))); });
+}
+document.addEventListener("input", e => {
+  if (e.target.matches("[data-rows]")) { const sel = $("[data-rowsel]"); filterRows($(e.target.dataset.rows), e.target.value, sel ? sel.value : ""); }
+  if (e.target.matches("[data-live=opac]")) $("#opacres").innerHTML = opacList($("#opacq").value, $("#opaccat").value);
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
+document.addEventListener("error", e => { if (e.target.tagName === "IMG") e.target.style.visibility = "hidden"; }, true);
+
+document.addEventListener("submit", async e => {
+  const f = e.target.closest("[data-form]"); if (!f) return;
+  e.preventDefault();
+  const d = Object.fromEntries(new FormData(f)); const kind = f.dataset.form;
+  const btn = f.querySelector("button:not([type=button])"); if (btn) btn.disabled = true;
+  try {
+    if (kind === "login") {
+      try { await api("/login", { method: "POST", body: { email: d.email, password: d.password } }); }
+      catch (err) { $("#loginerr").textContent = err.message; return; }
+      await refresh(); location.hash = "#/dashboard"; render(); return;
+    }
+    if (kind === "register") {
+      if (d.password !== d.password2) { toast("The two passwords do not match.", true); return; }
+      const em = d.email.trim().toLowerCase();
+      const r = await api("/register", { method: "POST", body: d });
+      $("#regpanel").innerHTML = `<div class="okbox"><h2>Registration received</h2><p>Thank you, <strong>${esc(r.first)}</strong>. Your admission number is:</p>
+        <p style="font:700 2rem var(--head);color:var(--navy);margin:.2rem 0 1rem">${esc(r.adm)}</p>
+        <p>Keep this number. The college office will confirm your registration. You can already sign in with <strong>${esc(em)}</strong> and the password you chose.</p>
+        <p style="margin:0"><a class="btn" href="#/login">${t("Sign in")}</a> <a class="btn ghost" href="#/home">Back to home</a></p></div>`;
+      window.scrollTo(0, 0); return;
+    }
+    if (kind === "contact") { await api("/contact", { method: "POST", body: d }); f.reset(); toast(lang === "sw" ? "Ujumbe wako umetumwa." : "Your message has been sent. We will reply by email."); return; }
+    if (kind === "subscribe") { await api("/subscribe", { method: "POST", body: d }); f.reset(); toast(lang === "sw" ? "Umejiunga kikamilifu." : "You are subscribed."); return; }
+    if (kind === "chpw") { await api("/password", { method: "POST", body: { old: d.old, pw: d.pw, pw2: d.pw2 } }); f.reset(); toast("Password updated."); }
+  } catch (err) { toast(err.message, true); }
+  finally { if (btn) btn.disabled = false; }
+});
+
+window.addEventListener("hashchange", render);
+refresh().catch(err => toast(err.message, true)).then(render);
+</script>
+</body>
+</html>
