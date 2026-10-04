@@ -29,6 +29,11 @@
 		{
 			"binding": "FILES",
 			"bucket_name": "sjc-ebooks"
+		},
+		{
+			"bucket_name": "sjc-ebooks",
+			"binding": "sjc_ebooks",
+			"remote": true
 		}
 	]
 }
