@@ -189,10 +189,12 @@ route("GET", "/api/bootstrap", "public", async ({ env, user }) => {
     ebooks: db.prepare(EBOOKS),
     count: db.prepare("SELECT COUNT(*) AS n FROM students WHERE status = 'Active'"),
   };
-  if (user?.role === "admin") {
+  if (user?.role === "admin" || user?.role === "staff") {
     q.students = db.prepare(STUDENTS + " ORDER BY rowid");
     q.grades = db.prepare(GRADES + " ORDER BY rowid");
     q.loans = db.prepare(LOANS + " ORDER BY rowid");
+  }
+  if (user?.role === "admin") {
     q.messages = db.prepare("SELECT id, name, email, phone, subject, message, date FROM messages ORDER BY rowid");
     q.subscribers = db.prepare("SELECT email, date FROM subscribers ORDER BY rowid");
   } else if (user?.studentId) {
@@ -220,13 +222,15 @@ route("POST", "/api/login", "public", async ({ req, env, url }) => {
   const b = await body(req);
   const email = String(b.email ?? "").trim().toLowerCase().slice(0, 200);
   const pw = String(b.password ?? "").slice(0, 200);
+  const wantRole = String(b.role ?? "");
+  if (!["admin", "staff", "student"].includes(wantRole)) throw bad("Choose how you are signing in: Admin, Staff or Student.");
   const now = Date.now();
 
   const th = await env.DB.prepare("SELECT fails, first_at FROM login_throttle WHERE email = ?").bind(email).first();
   if (th && th.fails >= 5 && now - th.first_at < 15 * 60 * 1000)
     throw new HttpError(429, "Too many failed attempts. Please try again in 15 minutes.");
 
-  const u = await env.DB.prepare("SELECT id, pass_hash FROM users WHERE email = ?").bind(email).first();
+  const u = await env.DB.prepare("SELECT id, pass_hash, role FROM users WHERE email = ?").bind(email).first();
   const ok = await verifyPassword(pw, u ? u.pass_hash : DUMMY_HASH); // same work whether or not the user exists
   if (!u || !ok) {
     await env.DB.prepare(
@@ -236,6 +240,10 @@ route("POST", "/api/login", "public", async ({ req, env, url }) => {
          first_at = CASE WHEN ?2 - first_at > 900000 THEN ?2 ELSE first_at END`
     ).bind(email, now).run();
     throw new HttpError(401, "The email or password is not correct. Check both and try again.");
+  }
+  if (u.role !== wantRole) {
+    const label = { admin: "an Admin", staff: "a Staff", student: "a Student" };
+    throw new HttpError(403, `This account is not ${label[wantRole]} account. Go back and choose the correct login type.`);
   }
   await env.DB.batch([
     env.DB.prepare("DELETE FROM login_throttle WHERE email = ?").bind(email),
@@ -303,6 +311,20 @@ route("POST", "/api/password", "user", async ({ req, env, user, url }) => {
   return json({ ok: true }, 200, { "set-cookie": sessionCookie(token, exp, url.protocol === "https:") });
 });
 
+/* ===== admin: staff accounts ===== */
+route("POST", "/api/staff", "admin", async ({ req, env }) => {
+  const b = await body(req);
+  const name = str(b.name, "Name", { req: true, max: 100 });
+  const email = emailStr(b.email);
+  const pw = passwordStr(b.password);
+  const used = await env.DB.prepare("SELECT 1 AS x FROM users WHERE email = ?").bind(email).first()
+            || await env.DB.prepare("SELECT 1 AS x FROM students WHERE email = ?").bind(email).first();
+  if (used) throw new HttpError(409, "An account with this email already exists.");
+  await env.DB.prepare("INSERT INTO users(id, email, pass_hash, role, name, created_at) VALUES(?,?,?,?,?,?)")
+    .bind(newId(), email, await hashPassword(pw), "staff", name, Date.now()).run();
+  return json({ ok: true }, 201);
+});
+
 route("GET", "/api/ebooks/:id/file", "user", async ({ env, params }) => {
   const row = await env.DB.prepare("SELECT file_key, file_name FROM ebooks WHERE id = ?").bind(params.id).first();
   if (!row || !row.file_key) throw new HttpError(404, "File not found.");
@@ -364,18 +386,18 @@ function readGrade(b) {
     score,
   };
 }
-route("POST", "/api/grades", "admin", async ({ req, env }) => {
+route("POST", "/api/grades", "staff", async ({ req, env }) => {
   const g = readGrade(await body(req));
   await env.DB.prepare("INSERT INTO grades(id, student_id, course, term, score) VALUES(?,?,?,?,?)").bind(newId(), g.studentId, g.course, g.term, g.score).run();
   return json({ ok: true }, 201);
 });
-route("PUT", "/api/grades/:id", "admin", async ({ req, env, params }) => {
+route("PUT", "/api/grades/:id", "staff", async ({ req, env, params }) => {
   const g = readGrade(await body(req));
   const r = await env.DB.prepare("UPDATE grades SET student_id=?, course=?, term=?, score=? WHERE id=?").bind(g.studentId, g.course, g.term, g.score, params.id).run();
   if (!r.meta.changes) throw new HttpError(404, "Result not found.");
   return json({ ok: true });
 });
-route("DELETE", "/api/grades/:id", "admin", async ({ env, params }) => {
+route("DELETE", "/api/grades/:id", "staff", async ({ env, params }) => {
   await env.DB.prepare("DELETE FROM grades WHERE id = ?").bind(params.id).run();
   return json({ ok: true });
 });
@@ -390,7 +412,7 @@ function readBook(b) {
     copies: intRange(b.copies, "Copies", 1, 1000),
   };
 }
-route("POST", "/api/books", "admin", async ({ req, env }) => {
+route("POST", "/api/books", "staff", async ({ req, env }) => {
   const b = readBook(await body(req));
   let call = b.call;
   if (!call) {
@@ -400,19 +422,19 @@ route("POST", "/api/books", "admin", async ({ req, env }) => {
   await env.DB.prepare("INSERT INTO books(id, title, author, category, call_no, copies) VALUES(?,?,?,?,?,?)").bind(newId(), b.title, b.author, b.category, call, b.copies).run();
   return json({ ok: true }, 201);
 });
-route("PUT", "/api/books/:id", "admin", async ({ req, env, params }) => {
+route("PUT", "/api/books/:id", "staff", async ({ req, env, params }) => {
   const b = readBook(await body(req));
   const r = await env.DB.prepare("UPDATE books SET title=?, author=?, category=?, call_no=?, copies=? WHERE id=?").bind(b.title, b.author, b.category, b.call, b.copies, params.id).run();
   if (!r.meta.changes) throw new HttpError(404, "Book not found.");
   return json({ ok: true });
 });
-route("DELETE", "/api/books/:id", "admin", async ({ env, params }) => {
+route("DELETE", "/api/books/:id", "staff", async ({ env, params }) => {
   await env.DB.prepare("DELETE FROM books WHERE id = ?").bind(params.id).run(); // loans cascade
   return json({ ok: true });
 });
 
 /* ===== admin: loans ===== */
-route("POST", "/api/loans", "admin", async ({ req, env }) => {
+route("POST", "/api/loans", "staff", async ({ req, env }) => {
   const b = await body(req);
   const bookId = str(b.bookId, "Book", { req: true, max: 60 });
   const studentId = str(b.studentId, "Student", { req: true, max: 60 });
@@ -428,7 +450,7 @@ route("POST", "/api/loans", "admin", async ({ req, env }) => {
   if (!r.meta.changes) throw new HttpError(409, "No copy is available, or the student is not active.");
   return json({ ok: true }, 201);
 });
-route("POST", "/api/loans/:id/return", "admin", async ({ env, params }) => {
+route("POST", "/api/loans/:id/return", "staff", async ({ env, params }) => {
   const r = await env.DB.prepare("UPDATE loans SET returned = ? WHERE id = ? AND returned IS NULL").bind(today(), params.id).run();
   if (!r.meta.changes) throw new HttpError(409, "This loan is already returned or does not exist.");
   return json({ ok: true });
@@ -460,7 +482,7 @@ const putFile = async (env, id, u) => {
   return key;
 };
 
-route("POST", "/api/ebooks", "admin", async ({ req, env }) => {
+route("POST", "/api/ebooks", "staff", async ({ req, env }) => {
   const { rec, upload } = await readEbookForm(req);
   const id = newId();
   const key = upload ? await putFile(env, id, upload) : null;
@@ -473,7 +495,7 @@ route("POST", "/api/ebooks", "admin", async ({ req, env }) => {
   }
   return json({ ok: true }, 201);
 });
-route("PUT", "/api/ebooks/:id", "admin", async ({ req, env, params }) => {
+route("PUT", "/api/ebooks/:id", "staff", async ({ req, env, params }) => {
   const cur = await env.DB.prepare("SELECT file_key, file_name FROM ebooks WHERE id = ?").bind(params.id).first();
   if (!cur) throw new HttpError(404, "Resource not found.");
   const { rec, upload } = await readEbookForm(req);
@@ -489,7 +511,7 @@ route("PUT", "/api/ebooks/:id", "admin", async ({ req, env, params }) => {
   if (upload && cur.file_key) await env.FILES.delete(cur.file_key);
   return json({ ok: true });
 });
-route("DELETE", "/api/ebooks/:id", "admin", async ({ env, params }) => {
+route("DELETE", "/api/ebooks/:id", "staff", async ({ env, params }) => {
   const cur = await env.DB.prepare("SELECT file_key FROM ebooks WHERE id = ?").bind(params.id).first();
   if (!cur) return json({ ok: true });
   await env.DB.prepare("DELETE FROM ebooks WHERE id = ?").bind(params.id).run();
@@ -512,10 +534,13 @@ export default {
       const user = await currentUser(req, env);
       if (r.auth !== "public" && !user) throw new HttpError(401, "Please sign in.");
       if (r.auth === "admin" && user.role !== "admin") throw new HttpError(403, "Administrators only.");
+      if (r.auth === "staff" && user.role !== "admin" && user.role !== "staff") throw new HttpError(403, "Staff only.");
       return await r.handler({ req, env, url, user, params });
     } catch (e) {
       if (e instanceof HttpError) return json({ error: e.message }, e.status);
       const m = String((e && e.message) || "");
+      if (m.includes("no such table") || m.includes("no such column") || m.includes("D1_ERROR"))
+        return json({ error: "The database is not set up yet. Run: npx wrangler d1 migrations apply sjc-db --remote (details: " + m.slice(0, 120) + ")" }, 500);
       if (m.includes("UNIQUE constraint failed")) return json({ error: "This record already exists." }, 409);
       if (m.includes("FOREIGN KEY constraint failed")) return json({ error: "A related record was not found." }, 400);
       console.error(e);

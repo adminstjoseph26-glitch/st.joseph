@@ -19,7 +19,7 @@ npx wrangler d1 create sjc-db
 # 2. Tengeneza bucket ya R2 (lazima R2 iwe imewashwa kwenye dashboard ya Cloudflare)
 npx wrangler r2 bucket create sjc-ebooks
 
-# 3. Tengeneza majedwali
+# 3. Tengeneza majedwali (inajumuisha 0002: role mpya ya staff)
 npx wrangler d1 migrations apply sjc-db --remote
 
 # 4. Tengeneza akaunti ya admin (nenosiri linahifadhiwa likiwa hashed)
@@ -60,3 +60,11 @@ npx wrangler dev        # http://localhost:8787
 - **Backup ya D1**: `npx wrangler d1 export sjc-db --remote --output=backup.sql` (D1 pia ina Time Travel ya siku 30).
 - **Backup ya R2**: faili zinakaa R2; tumia `rclone` au Cloudflare Dashboard kuzinakili ukihitaji.
 - Wanafunzi wanaoongezwa na admin (Add student) hawapati akaunti ya kuingia; wanaojisajili wenyewe mtandaoni wanapata.
+
+## Aina tatu za kuingia (Admin / Staff / Student)
+
+- Kitufe cha **Login** kinaonyesha chaguo: Admin, Staff au Student, kisha fomu ya barua pepe na nenosiri.
+- Seva inakagua kuwa akaunti ni ya aina uliyochagua; vinginevyo inakataa.
+- **Staff** wanaweza kusimamia maktaba, mikopo, E-Library na matokeo; hawawezi kuhariri/kufuta wanafunzi, kuona ujumbe, wala kuunda akaunti.
+- Admin anaunda akaunti za staff kwenye *Settings → Add a staff account*, au kwa `ROLE=staff node scripts/make-admin.mjs`.
+- Baada ya `d1 migrations apply`, kila mtu atatoka kwenye kikao (mara moja tu).
