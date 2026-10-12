@@ -709,7 +709,7 @@ function pageRegisterRequest(role) {
   return `<div class="loginwrap"><div class="loginbox" style="width:min(520px,100%)"><div class="panel" id="regpanel">
     <a class="brand" href="#/home" style="margin-bottom:1rem">${LOGO}<span><b>${esc(SITE.name)}</b><small>${label} registration</small></span></a>
     <span class="rolebadge">${label} registration</span>
-    <p style="margin:.2rem 0 1rem;color:var(--muted);font-size:.92rem">An administrator must approve your request before you can log in.</p>
+    <p style="margin:.2rem 0 1rem;color:var(--muted);font-size:.92rem">${role === "admin" ? "The first administrator account is created immediately and can log in at once. After that, new admin requests must be approved by an existing administrator." : "An administrator must approve your request before you can log in."}</p>
     <form data-form="request"><input type="hidden" name="role" value="${role}">
       <div class="fgrid">${fld("Full name", "name", { required: true, full: true, autocomplete: "name" })}
         ${fld(t("Email"), "email", { type: "email", required: true, autocomplete: "email" })}${fld(t("Phone number"), "phone", { type: "tel", autocomplete: "tel" })}
@@ -1149,7 +1149,12 @@ document.addEventListener("submit", async e => {
     if (kind === "subscribe") { await api("/subscribe", { method: "POST", body: d }); f.reset(); toast(lang === "sw" ? "Umejiunga kikamilifu." : "You are subscribed."); return; }
     if (kind === "request") {
       if (d.password !== d.password2) { toast("The two passwords do not match.", true); return; }
-      await api("/request-account", { method: "POST", body: d });
+      const rr = await api("/request-account", { method: "POST", body: d });
+      if (rr.approved) {
+        $("#regpanel").innerHTML = `<div class="okbox"><h2>Admin account created</h2><p>Your administrator account <strong>${esc(d.email.trim().toLowerCase())}</strong> is ready. You can log in now.</p>
+          <p style="margin:0"><a class="btn" href="#/login/admin">${t("Login")} as Admin</a> <a class="btn ghost" href="#/home">Back to home</a></p></div>`;
+        window.scrollTo(0, 0); return;
+      }
       $("#regpanel").innerHTML = `<div class="okbox"><h2>Request received</h2><p>Thank you. Your ${esc(d.role)} account request for <strong>${esc(d.email.trim().toLowerCase())}</strong> has been sent.</p>
         <p>An administrator will review it. You can log in once it is approved.</p><p style="margin:0"><a class="btn" href="#/login">${t("Login")}</a> <a class="btn ghost" href="#/home">Back to home</a></p></div>`;
       window.scrollTo(0, 0); return;

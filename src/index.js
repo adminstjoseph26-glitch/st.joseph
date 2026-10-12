@@ -287,6 +287,19 @@ route("POST", "/api/request-account", "public", async ({ req, env }) => {
   const phone = str(b.phone, "Phone number", { max: 30 });
   const pw = passwordStr(b.password);
   if (b.password !== b.password2) throw bad("The two passwords do not match.");
+  // First administrator: no admin exists yet, so there is nobody who could approve. Create the account straight away.
+  const admins = (await env.DB.prepare("SELECT COUNT(*) AS n FROM users WHERE role = 'admin'").first()).n;
+  if (role === "admin" && admins === 0) {
+    const taken = await env.DB.prepare("SELECT 1 AS x FROM users WHERE email = ?").bind(email).first()
+               || await env.DB.prepare("SELECT 1 AS x FROM students WHERE email = ?").bind(email).first();
+    if (taken) throw new HttpError(409, "An account with this email already exists.");
+    await env.DB.batch([
+      env.DB.prepare("DELETE FROM account_requests WHERE email = ?").bind(email),
+      env.DB.prepare("INSERT INTO users(id, email, pass_hash, role, name, created_at) VALUES(?,?,?,?,?,?)")
+        .bind(newId(), email, await hashPassword(pw), "admin", name, Date.now()),
+    ]);
+    return json({ ok: true, role, approved: true }, 201);
+  }
   const used = await env.DB.prepare("SELECT 1 AS x FROM users WHERE email = ?").bind(email).first()
             || await env.DB.prepare("SELECT 1 AS x FROM students WHERE email = ?").bind(email).first()
             || await env.DB.prepare("SELECT 1 AS x FROM account_requests WHERE email = ?").bind(email).first();
