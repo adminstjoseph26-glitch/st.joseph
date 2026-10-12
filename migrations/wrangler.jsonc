@@ -1,0 +1,24 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "st-joseph",
+  "main": "src/index.js",
+  "compatibility_date": "2025-09-01",
+
+  "assets": {
+    "directory": "./public",
+    "run_worker_first": ["/api/*"]
+  },
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "sjc-db",
+      "database_id": "0848e0d2-495b-456e-aaef-5a9aaf7e279f",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  "r2_buckets": [
+    { "binding": "FILES", "bucket_name": "sjc-ebooks" }
+  ]
+}
