@@ -366,7 +366,7 @@ const store = {
 /* =========================================================
    Data
    ========================================================= */
-let db = { me: null, stats: { students: 0 }, students: [], grades: [], books: [], ebooks: [], loans: [], messages: [], subscribers: [] };
+let db = { me: null, stats: { students: 0 }, students: [], grades: [], books: [], ebooks: [], loans: [], messages: [], subscribers: [], requests: [] };
 const me = () => db.me;
 
 function gradeLetter(n) { return n >= 70 ? "A" : n >= 60 ? "B" : n >= 50 ? "C" : n >= 40 ? "D" : "F"; }
@@ -472,7 +472,7 @@ function publicShell(inner, active) {
       <li><a class="top${active === "about" ? " on" : ""}" href="#/about">${t("About Us")}</a>
         <div class="sub"><a href="#/about">${lang === "sw" ? "Kuhusu chuo" : "About the college"}</a><a href="#/library">${lang === "sw" ? "Mifumo mipya ya chuo" : "Our new systems"}</a></div></li>
       <li><a class="top${active === "programmes" ? " on" : ""}" href="#/programmes">${t("Academics")}</a>
-        <div class="sub"><a href="#/programmes">${t("Programmes")}</a><a href="#/register">${t("Student Registration")}</a></div></li>
+        <div class="sub"><a href="#/programmes">${t("Programmes")}</a><a href="#/register/student">${t("Student Registration")}</a></div></li>
       <li><a class="top${active === "library" ? " on" : ""}" href="#/library">${t("Library & E-Library")}</a>
         <div class="sub"><a href="#/opac">${t("Online Catalogue (OPAC)")}</a><a href="#/elibrary">${t("E-Library")}</a><a href="#/library">${lang === "sw" ? "Kuhusu maktaba" : "About the library"}</a></div></li>
       ${nav("#/news", "News & Events", "news")}
@@ -518,9 +518,9 @@ const NEWS = [
 
 function pageHome() {
   const slides = [
-    { img:"lib", h:t("Welcome to St Joseph's College"), p: lang === "sw" ? "Chuo chenye maktaba ya kisasa, katalogi ya mtandaoni na mfumo kamili wa kusimamia wanafunzi." : "A college with a modern library, an online catalogue and a complete system for managing students and records.", a:["#/register", t("Register as a student")], b:["#/programmes", t("Programmes")] },
+    { img:"lib", h:t("Welcome to St Joseph's College"), p: lang === "sw" ? "Chuo chenye maktaba ya kisasa, katalogi ya mtandaoni na mfumo kamili wa kusimamia wanafunzi." : "A college with a modern library, an online catalogue and a complete system for managing students and records.", a:["#/register/student", t("Register as a student")], b:["#/programmes", t("Programmes")] },
     { img:"reading", h: lang === "sw" ? "Soma popote, wakati wowote" : "Read anywhere, any time", p: lang === "sw" ? "Maktaba Mtandao inakupa vitabu na miongozo ya masomo ukiwa na akaunti yako." : "The E-Library gives registered students softcopy books and study guides on any device.", a:["#/elibrary", t("E-Library")], b:["#/opac", t("Online Catalogue (OPAC)")] },
-    { img:"hall", h: lang === "sw" ? "Anza safari yako ya taaluma" : "Start your academic journey", p: lang === "sw" ? "Chagua programu, jaza fomu mtandaoni na upate namba yako ya usajili papo hapo." : "Choose a programme, fill in the form online and receive your admission number straight away.", a:["#/register", t("Apply Now")], b:["#/login", t("Login")] }
+    { img:"hall", h: lang === "sw" ? "Anza safari yako ya taaluma" : "Start your academic journey", p: lang === "sw" ? "Chagua programu, jaza fomu mtandaoni na upate namba yako ya usajili papo hapo." : "Choose a programme, fill in the form online and receive your admission number straight away.", a:["#/register/student", t("Apply Now")], b:["#/login", t("Login")] }
   ];
   const hero = `<section class="hero" aria-roledescription="carousel" aria-label="Highlights">
     ${slides.map((s, i) => `<div class="slide${i === 0 ? " on" : ""}" data-slide="${i}"><img src="${img(s.img, 1800)}" alt="" ${i ? 'loading="lazy"' : 'fetchpriority="high"'}>
@@ -535,7 +535,7 @@ function pageHome() {
     <div><b>${db.ebooks.length}</b><span>${t("Digital resources")}</span></div><div><b>${PROGRAMMES.length}</b><span>${t("Programmes offered")}</span></div></div></div>`;
 
   const programmes = `<section class="sec"><div class="wrap">
-    <div class="sechead"><div><h2>${t("Explore Our Programmes")}</h2><p>${lang === "sw" ? "Chagua programu inayokufaa na jisajili mtandaoni." : "Pick the programme that fits you and register online."}</p></div><a class="btn" href="#/register">${t("Apply Now")}</a></div>
+    <div class="sechead"><div><h2>${t("Explore Our Programmes")}</h2><p>${lang === "sw" ? "Chagua programu inayokufaa na jisajili mtandaoni." : "Pick the programme that fits you and register online."}</p></div><a class="btn" href="#/register/student">${t("Apply Now")}</a></div>
     <div class="grid g3">${PROGRAMMES.slice(0, 3).map(progCard).join("")}</div>
     <p style="margin-top:1.4rem"><a class="btn ghost" href="#/programmes">${t("View All")}</a></p></div></section>`;
 
@@ -582,7 +582,7 @@ function pageHome() {
 function progCard(p) {
   return `<article class="card"><div class="ph"><img src="${img(p.img, 800)}" alt="" loading="lazy"></div><div class="bd">
     <span class="tag">${p.level} &middot; ${p.years} ${p.years > 1 ? "years" : "year"}</span><h3>${esc(p.name)}</h3><p>${esc(p.blurb)}</p>
-    <a class="more" href="#/register?p=${p.code}">${t("Apply Now")}</a></div></article>`;
+    <a class="more" href="#/register/student?p=${p.code}">${t("Apply Now")}</a></div></article>`;
 }
 function newsCard(n) {
   return `<article class="card"><div class="newsimg"><img src="${img(n.img, 700)}" alt="" loading="lazy"></div><div class="bd"><small style="color:var(--muted)">${fmt(n.date)}</small><h4 style="margin-top:.3rem">${esc(n.title)}</h4><p>${esc(n.text)}</p></div></article>`;
@@ -690,6 +690,35 @@ function pageNews() {
 function pageContact() { return pageHead(t("Contact Us"), "We are glad to hear from you") + contactSection(); }
 function pageFaqs() { return pageHead(t("FAQs"), "") + faqSection(); }
 
+const REG_ROLES = {
+  admin:   { label: "Admin",   desc: "Request an administrator account (needs approval)", ic: "gear" },
+  staff:   { label: "Staff",   desc: "Request a staff account (needs approval)", ic: "book" },
+  student: { label: "Student", desc: "Register as a new student of the college", ic: "user" }
+};
+function pageRegisterChoose() {
+  return `<div class="loginwrap"><div class="loginbox"><div class="panel">
+    <a class="brand" href="#/home" style="margin-bottom:1rem">${LOGO}<span><b>${esc(SITE.name)}</b><small>Register</small></span></a>
+    <h3 style="margin:.4rem 0 0">Who is registering?</h3>
+    <p style="margin:.2rem 0 0;color:var(--muted);font-size:.92rem">Choose your account type to continue.</p>
+    <div class="roles">${Object.entries(REG_ROLES).map(([k, r]) => `<a class="role" href="#/register/${k}">${IC[r.ic] || ""}<span><b>${r.label}</b><small>${r.desc}</small></span></a>`).join("")}</div>
+    <p style="margin:1rem 0 0;font-size:.9rem">Already have an account? <a href="#/login">${t("Login")}</a> &middot; <a href="#/home">Back to site</a></p>
+  </div></div></div>`;
+}
+function pageRegisterRequest(role) {
+  const label = REG_ROLES[role].label;
+  return `<div class="loginwrap"><div class="loginbox" style="width:min(520px,100%)"><div class="panel" id="regpanel">
+    <a class="brand" href="#/home" style="margin-bottom:1rem">${LOGO}<span><b>${esc(SITE.name)}</b><small>${label} registration</small></span></a>
+    <span class="rolebadge">${label} registration</span>
+    <p style="margin:.2rem 0 1rem;color:var(--muted);font-size:.92rem">An administrator must approve your request before you can log in.</p>
+    <form data-form="request"><input type="hidden" name="role" value="${role}">
+      <div class="fgrid">${fld("Full name", "name", { required: true, full: true, autocomplete: "name" })}
+        ${fld(t("Email"), "email", { type: "email", required: true, autocomplete: "email" })}${fld(t("Phone number"), "phone", { type: "tel", autocomplete: "tel" })}
+        ${fld(t("Password"), "password", { type: "password", required: true, minlength: 8, autocomplete: "new-password", hint: "At least 8 characters" })}${fld("Confirm password", "password2", { type: "password", required: true, minlength: 8, autocomplete: "new-password" })}</div>
+      <button class="btn gold" style="margin-top:1rem;width:100%">Send request</button>
+    </form>
+    <p style="margin:1rem 0 0;font-size:.9rem"><a href="#/register">&larr; Change account type</a> &middot; <a href="#/home">Back to site</a></p>
+  </div></div></div>`;
+}
 function pageRegister() {
   const q = new URLSearchParams((location.hash.split("?")[1]) || "");
   const sel = q.get("p") || "";
@@ -737,7 +766,7 @@ function pageLogin(role) {
       <h3 style="margin:.4rem 0 0">Who is signing in?</h3>
       <p style="margin:.2rem 0 0;color:var(--muted);font-size:.92rem">Choose your account type to continue.</p>
       <div class="roles">${Object.entries(LOGIN_ROLES).map(([k, r]) => `<a class="role" href="#/login/${k}">${IC[r.ic] || ""}<span><b>${r.label}</b><small>${r.desc}</small></span></a>`).join("")}</div>
-      <p style="margin:1rem 0 0;font-size:.9rem">New student? <a href="#/register">${t("Register")}</a> &middot; <a href="#/home">Back to site</a></p>
+      <p style="margin:1rem 0 0;font-size:.9rem">New here? <a href="#/register">${t("Register")}</a> &middot; <a href="#/home">Back to site</a></p>
     </div></div></div>`;
   }
   return `<div class="loginwrap"><div class="loginbox"><div class="panel">
@@ -750,7 +779,7 @@ function pageLogin(role) {
       <p id="loginerr" role="alert" style="color:var(--bad);min-height:1.4em;margin:.7rem 0 .2rem;font-size:.9rem"></p>
       <button class="btn" style="width:100%">${t("Sign in")}</button>
     </form>
-    <p style="margin:1rem 0 0;font-size:.9rem"><a href="#/login">&larr; Change account type</a>${role === "student" ? ` &middot; <a href="#/register">${t("Register")}</a>` : ""} &middot; <a href="#/home">Back to site</a></p>
+    <p style="margin:1rem 0 0;font-size:.9rem"><a href="#/login">&larr; Change account type</a>${role === "student" ? ` &middot; <a href="#/register/student">${t("Register")}</a>` : ""} &middot; <a href="#/home">Back to site</a></p>
   </div>
   </div></div>`;
 }
@@ -761,7 +790,7 @@ function pageLogin(role) {
 const ADMIN_NAV = [
   ["overview","Overview","home"],["students","Students","users"],["academics","Academic records","chart"],
   ["books","Library catalogue","book"],["loans","Loans and returns","swap"],["ebooks","E-Library uploads","cloud"],
-  ["reports","Reports","file"],["enquiries","Enquiries","mail"],["settings","Settings","gear"]
+  ["requests","Account requests","users"],["reports","Reports","file"],["enquiries","Enquiries","mail"],["settings","Settings","gear"]
 ];
 const STAFF_NAV = [
   ["overview","Overview","home"],["students","Students","users"],["academics","Academic records","chart"],
@@ -788,7 +817,7 @@ function pageDashboard(sec) {
   if (u.role === "admin" || u.role === "staff") {
     const NAV = u.role === "admin" ? ADMIN_NAV : STAFF_NAV;
     sec = NAV.find(n => n[0] === sec) ? sec : "overview";
-    const fn = { overview: dOverview, students: dStudents, academics: dAcademics, books: dBooks, loans: dLoans, ebooks: dEbooks, reports: dReports, enquiries: dEnquiries, settings: dSettings }[sec];
+    const fn = { overview: dOverview, students: dStudents, academics: dAcademics, books: dBooks, loans: dLoans, ebooks: dEbooks, reports: dReports, enquiries: dEnquiries, requests: dRequests, settings: dSettings }[sec];
     return dashShell(sec, fn(), NAV, NAV.find(n => n[0] === sec)[1], u);
   }
   sec = STUDENT_NAV.find(n => n[0] === sec) ? sec : "profile";
@@ -913,6 +942,11 @@ function dReports() {
   <div class="tw"><table><thead><tr>${r.cols.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${r.rows.map(x => `<tr>${x.map(c => `<td>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table>${r.rows.length ? "" : `<div class="empty">Nothing to show for this report.</div>`}</div></div>`;
 }
 
+function dRequests() {
+  const r = db.requests || [];
+  return `<div class="panel"><h3>Staff and admin account requests</h3>${r.length ? `<div class="tw"><table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Type</th><th>Date</th><th>Actions</th></tr></thead><tbody>${r.map(x => `<tr><td><strong>${esc(x.name)}</strong></td><td>${esc(x.email)}</td><td>${esc(x.phone || "-")}</td><td><span class="badge ${x.role === "admin" ? "warn" : "ok"}">${x.role === "admin" ? "Admin" : "Staff"}</span></td><td>${fmt(x.date)}</td>
+    <td><div class="acts"><button class="btn sm" data-act="approveReq" data-id="${x.id}">Approve</button><button class="btn sm danger" data-act="rejectReq" data-id="${x.id}">Reject</button></div></td></tr>`).join("")}</tbody></table></div>` : `<div class="empty">No pending requests.</div>`}</div>`;
+}
 function dEnquiries() {
   const m = [...db.messages].reverse();
   return `<div class="panel"><h3>Messages from the contact form</h3>${m.length ? m.map(x => `<div class="listrow" style="display:block"><strong>${esc(x.subject)}</strong> <small style="color:var(--muted)">from ${esc(x.name)} (${esc(x.email)}${x.phone ? ", " + esc(x.phone) : ""}) on ${fmt(x.date)}</small><p style="margin:.3rem 0 0">${esc(x.message)}</p></div>`).join("") : `<div class="empty">No messages yet.</div>`}</div>
@@ -964,7 +998,7 @@ function render() {
   const [pathPart] = raw.split("?");
   const [p, sub] = pathPart.split("/");
   const app = $("#app");
-  const titles = { home: "Home", about: "About", programmes: "Programmes", library: "Library", opac: "Online Catalogue", elibrary: "E-Library", news: "News and events", contact: "Contact", register: "Student registration", login: "Sign in", dashboard: "Portal", faqs: "FAQs" };
+  const titles = { home: "Home", about: "About", programmes: "Programmes", library: "Library", opac: "Online Catalogue", elibrary: "E-Library", news: "News and events", contact: "Contact", register: "Register", login: "Sign in", dashboard: "Portal", faqs: "FAQs" };
   document.title = `${SITE.name} | ${titles[p] || "Home"}`;
   document.documentElement.lang = lang === "sw" ? "sw" : "en";
   const pub = (inner, a) => publicShell(inner, a);
@@ -978,7 +1012,7 @@ function render() {
     case "news": html = pub(pageNews(), "news"); break;
     case "contact": html = pub(pageContact(), "contact"); break;
     case "faqs": html = pub(pageFaqs(), ""); break;
-    case "register": html = pub(pageRegister(), "programmes"); break;
+    case "register": html = sub === "student" ? pub(pageRegister(), "programmes") : (sub === "admin" || sub === "staff") ? pub(pageRegisterRequest(sub), "") : pub(pageRegisterChoose(), ""); break;
     case "login": html = me() ? (location.hash = "#/dashboard", "") : pub(pageLogin(sub), ""); break;
     case "dashboard": html = pageDashboard(sub); break;
     default: html = pub(pageHome(), "home");
@@ -1014,6 +1048,8 @@ const actions = {
     const avg = g.length ? (g.reduce((a, b) => a + b.score, 0) / g.length).toFixed(1) : "-";
     modal(fullName(s), `<dl class="kv"><dt>Admission number</dt><dd>${esc(s.adm)}</dd><dt>Status</dt><dd>${badge(s.status)}</dd><dt>Programme</dt><dd>${esc(prog(s.programme)?.name)} (Year ${esc(s.year)})</dd><dt>Gender</dt><dd>${esc(s.gender)}</dd><dt>Date of birth</dt><dd>${fmt(s.dob)}</dd><dt>Phone</dt><dd>${esc(s.phone)}</dd><dt>Email</dt><dd>${esc(s.email)}</dd><dt>Address</dt><dd>${esc(s.address)} ${esc(s.region)}</dd><dt>Guardian</dt><dd>${esc(s.guardian || "-")} ${esc(s.guardianPhone || "")}</dd><dt>Previous school</dt><dd>${esc(s.prevSchool || "-")}</dd><dt>Results</dt><dd>${g.length} recorded, average ${avg}</dd><dt>Registered</dt><dd>${fmt(s.registered)}</dd></dl>`, null);
   },
+  approveReq(el) { act(() => api("/requests/" + el.dataset.id + "/approve", { method: "POST" }), "Account approved. The person can now log in."); },
+  rejectReq(el) { modal("Reject request", "<p>Reject this request? The person will not be able to log in.</p>", () => act(() => api("/requests/" + el.dataset.id + "/reject", { method: "POST" }), "Request rejected."), "Reject"); },
   approve(el) { act(() => api("/students/" + el.dataset.id + "/approve", { method: "POST" }), "Student approved."); },
   delStudent(el) {
     const s = stu(el.dataset.id);
@@ -1111,6 +1147,13 @@ document.addEventListener("submit", async e => {
     }
     if (kind === "contact") { await api("/contact", { method: "POST", body: d }); f.reset(); toast(lang === "sw" ? "Ujumbe wako umetumwa." : "Your message has been sent. We will reply by email."); return; }
     if (kind === "subscribe") { await api("/subscribe", { method: "POST", body: d }); f.reset(); toast(lang === "sw" ? "Umejiunga kikamilifu." : "You are subscribed."); return; }
+    if (kind === "request") {
+      if (d.password !== d.password2) { toast("The two passwords do not match.", true); return; }
+      await api("/request-account", { method: "POST", body: d });
+      $("#regpanel").innerHTML = `<div class="okbox"><h2>Request received</h2><p>Thank you. Your ${esc(d.role)} account request for <strong>${esc(d.email.trim().toLowerCase())}</strong> has been sent.</p>
+        <p>An administrator will review it. You can log in once it is approved.</p><p style="margin:0"><a class="btn" href="#/login">${t("Login")}</a> <a class="btn ghost" href="#/home">Back to home</a></p></div>`;
+      window.scrollTo(0, 0); return;
+    }
     if (kind === "addstaff") { await api("/staff", { method: "POST", body: { name: d.name, email: d.email, password: d.password } }); f.reset(); toast("Staff account created."); return; }
     if (kind === "chpw") { await api("/password", { method: "POST", body: { old: d.old, pw: d.pw, pw2: d.pw2 } }); f.reset(); toast("Password updated."); }
   } catch (err) { toast(err.message, true); }

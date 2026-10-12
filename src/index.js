@@ -197,6 +197,7 @@ route("GET", "/api/bootstrap", "public", async ({ env, user }) => {
   if (user?.role === "admin") {
     q.messages = db.prepare("SELECT id, name, email, phone, subject, message, date FROM messages ORDER BY rowid");
     q.subscribers = db.prepare("SELECT email, date FROM subscribers ORDER BY rowid");
+    q.requests = db.prepare("SELECT id, name, email, phone, role, created_at AS date FROM account_requests ORDER BY rowid");
   } else if (user?.studentId) {
     q.students = db.prepare(STUDENTS + " WHERE id = ?").bind(user.studentId);
     q.grades = db.prepare(GRADES + " WHERE student_id = ? ORDER BY rowid").bind(user.studentId);
@@ -215,6 +216,7 @@ route("GET", "/api/bootstrap", "public", async ({ env, user }) => {
     loans: r.loans || [],
     messages: r.messages || [],
     subscribers: r.subscribers || [],
+    requests: r.requests || [],
   });
 });
 
@@ -276,6 +278,24 @@ route("POST", "/api/register", "public", async ({ req, env }) => {
   return json({ adm, first: s.first }, 201);
 });
 
+route("POST", "/api/request-account", "public", async ({ req, env }) => {
+  const b = await body(req);
+  const role = String(b.role ?? "");
+  if (role !== "admin" && role !== "staff") throw bad("Choose Admin or Staff.");
+  const name = str(b.name, "Full name", { req: true, max: 100 });
+  const email = emailStr(b.email);
+  const phone = str(b.phone, "Phone number", { max: 30 });
+  const pw = passwordStr(b.password);
+  if (b.password !== b.password2) throw bad("The two passwords do not match.");
+  const used = await env.DB.prepare("SELECT 1 AS x FROM users WHERE email = ?").bind(email).first()
+            || await env.DB.prepare("SELECT 1 AS x FROM students WHERE email = ?").bind(email).first()
+            || await env.DB.prepare("SELECT 1 AS x FROM account_requests WHERE email = ?").bind(email).first();
+  if (used) throw new HttpError(409, "An account or request with this email already exists.");
+  await env.DB.prepare("INSERT INTO account_requests(id, name, email, phone, role, pass_hash, created_at) VALUES(?,?,?,?,?,?,?)")
+    .bind(newId(), name, email, phone, role, await hashPassword(pw), today()).run();
+  return json({ ok: true, role }, 201);
+});
+
 route("POST", "/api/contact", "public", async ({ req, env }) => {
   const b = await body(req);
   await env.DB.prepare("INSERT INTO messages(id, name, email, phone, subject, message, date) VALUES(?,?,?,?,?,?,?)").bind(
@@ -309,6 +329,22 @@ route("POST", "/api/password", "user", async ({ req, env, user, url }) => {
   ]);
   const { token, exp } = await createSession(env, user.id);
   return json({ ok: true }, 200, { "set-cookie": sessionCookie(token, exp, url.protocol === "https:") });
+});
+
+/* ===== admin: account requests ===== */
+route("POST", "/api/requests/:id/approve", "admin", async ({ env, params }) => {
+  const r = await env.DB.prepare("SELECT id, name, email, role, pass_hash FROM account_requests WHERE id = ?").bind(params.id).first();
+  if (!r) throw new HttpError(404, "Request not found.");
+  await env.DB.batch([
+    env.DB.prepare("INSERT INTO users(id, email, pass_hash, role, name, created_at) VALUES(?,?,?,?,?,?)").bind(newId(), r.email, r.pass_hash, r.role, r.name, Date.now()),
+    env.DB.prepare("DELETE FROM account_requests WHERE id = ?").bind(r.id),
+  ]);
+  return json({ ok: true });
+});
+route("POST", "/api/requests/:id/reject", "admin", async ({ env, params }) => {
+  const r = await env.DB.prepare("DELETE FROM account_requests WHERE id = ?").bind(params.id).run();
+  if (!r.meta.changes) throw new HttpError(404, "Request not found.");
+  return json({ ok: true });
 });
 
 /* ===== admin: staff accounts ===== */

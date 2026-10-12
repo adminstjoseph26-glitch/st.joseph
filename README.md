@@ -68,3 +68,10 @@ npx wrangler dev        # http://localhost:8787
 - **Staff** wanaweza kusimamia maktaba, mikopo, E-Library na matokeo; hawawezi kuhariri/kufuta wanafunzi, kuona ujumbe, wala kuunda akaunti.
 - Admin anaunda akaunti za staff kwenye *Settings → Add a staff account*, au kwa `ROLE=staff node scripts/make-admin.mjs`.
 - Baada ya `d1 migrations apply`, kila mtu atatoka kwenye kikao (mara moja tu).
+
+## Usajili wa Admin / Staff / Student
+
+- Kitufe cha **Register** kinauliza kwanza: Admin, Staff au Student.
+- Student anajisajili moja kwa moja (fomu kamili). Admin na Staff wanatuma **ombi**; hawawezi kuingia hadi admin aliyepo aidhinishe kwenye *Dashboard → Account requests*.
+- Admin wa kwanza bado unamtengeneza kwa `node scripts/make-admin.mjs`.
+- Endesha `npx wrangler d1 migrations apply sjc-db --remote` ili kuongeza jedwali la `account_requests` (migration 0003).
