@@ -128,12 +128,14 @@ async function currentUser(req, env) {
 const STUDENTS = `SELECT id, adm, first, middle, last, gender, dob, phone, email, address, region, programme, year,
   guardian, guardian_phone AS guardianPhone, prev_school AS prevSchool, status, registered FROM students`;
 const GRADES = `SELECT id, student_id AS studentId, course, term, score FROM grades`;
-const LOANS = `SELECT id, book_id AS bookId, student_id AS studentId, issued, due, returned FROM loans`;
-const BOOKS = `SELECT b.id, b.title, b.author, b.category, b.copies, b.call_no AS "call",
+const LOANS = `SELECT id, book_id AS bookId, student_id AS studentId, issued, due, returned, renewals FROM loans`;
+const BOOKS = `SELECT b.id, b.title, b.author, b.category, b.copies, b.call_no AS "call", b.isbn, b.publisher, b.year, b.description,
   (SELECT COUNT(*) FROM loans l WHERE l.book_id = b.id AND l.returned IS NULL) AS "out"
   FROM books b ORDER BY b.title COLLATE NOCASE`;
-const EBOOKS = `SELECT id, title, author, category, format, added, (file_key IS NOT NULL) AS hasFile, file_name AS fileName
-  FROM ebooks ORDER BY added DESC, title COLLATE NOCASE`;
+const EBOOKS_COLS = `SELECT id, title, author, category, format, added, (file_key IS NOT NULL) AS hasFile, file_name AS fileName,
+  description, publisher, year, item_type AS itemType, status, submitted_by AS submittedBy, downloads FROM ebooks`;
+const EBOOKS_ORDER = ` ORDER BY added DESC, title COLLATE NOCASE`;
+const RESERVATIONS = `SELECT id, book_id AS bookId, student_id AS studentId, date, status FROM reservations`;
 
 const INSERT_STUDENT = `INSERT INTO students(id, adm, first, middle, last, gender, dob, phone, email, address, region,
   programme, year, guardian, guardian_phone, prev_school, status, registered) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
@@ -186,13 +188,16 @@ route("GET", "/api/bootstrap", "public", async ({ env, user }) => {
   const db = env.DB;
   const q = {
     books: db.prepare(BOOKS),
-    ebooks: db.prepare(EBOOKS),
+    ebooks: (user?.role === "admin" || user?.role === "staff")
+      ? db.prepare(EBOOKS_COLS + EBOOKS_ORDER)
+      : db.prepare(EBOOKS_COLS + " WHERE status = 'Published' OR (submitted_by != '' AND submitted_by = ?)" + EBOOKS_ORDER).bind(user ? user.id : "-"),
     count: db.prepare("SELECT COUNT(*) AS n FROM students WHERE status = 'Active'"),
   };
   if (user?.role === "admin" || user?.role === "staff") {
     q.students = db.prepare(STUDENTS + " ORDER BY rowid");
     q.grades = db.prepare(GRADES + " ORDER BY rowid");
     q.loans = db.prepare(LOANS + " ORDER BY rowid");
+    q.reservations = db.prepare(RESERVATIONS + " ORDER BY rowid");
   }
   if (user?.role === "admin") {
     q.messages = db.prepare("SELECT id, name, email, phone, subject, message, date FROM messages ORDER BY rowid");
@@ -202,6 +207,7 @@ route("GET", "/api/bootstrap", "public", async ({ env, user }) => {
     q.students = db.prepare(STUDENTS + " WHERE id = ?").bind(user.studentId);
     q.grades = db.prepare(GRADES + " WHERE student_id = ? ORDER BY rowid").bind(user.studentId);
     q.loans = db.prepare(LOANS + " WHERE student_id = ? ORDER BY rowid").bind(user.studentId);
+    q.reservations = db.prepare(RESERVATIONS + " WHERE student_id = ? ORDER BY rowid").bind(user.studentId);
   }
   const keys = Object.keys(q);
   const res = await db.batch(keys.map(k => q[k]));
@@ -217,6 +223,7 @@ route("GET", "/api/bootstrap", "public", async ({ env, user }) => {
     messages: r.messages || [],
     subscribers: r.subscribers || [],
     requests: r.requests || [],
+    reservations: r.reservations || [],
   });
 });
 
@@ -374,11 +381,14 @@ route("POST", "/api/staff", "admin", async ({ req, env }) => {
   return json({ ok: true }, 201);
 });
 
-route("GET", "/api/ebooks/:id/file", "user", async ({ env, params }) => {
-  const row = await env.DB.prepare("SELECT file_key, file_name FROM ebooks WHERE id = ?").bind(params.id).first();
+route("GET", "/api/ebooks/:id/file", "user", async ({ env, params, user }) => {
+  const row = await env.DB.prepare("SELECT file_key, file_name, status, submitted_by FROM ebooks WHERE id = ?").bind(params.id).first();
   if (!row || !row.file_key) throw new HttpError(404, "File not found.");
+  const canSee = row.status === "Published" || user.role === "admin" || user.role === "staff" || row.submitted_by === user.id;
+  if (!canSee) throw new HttpError(404, "File not found.");
   const obj = await env.FILES.get(row.file_key);
   if (!obj) throw new HttpError(404, "File not found.");
+  if (row.status === "Published") await env.DB.prepare("UPDATE ebooks SET downloads = downloads + 1 WHERE id = ?").bind(params.id).run();
   const ext = row.file_key.split(".").pop();
   const ascii = row.file_name.replace(/[^\w.\- ]+/g, "_") || "download";
   return new Response(obj.body, {
@@ -459,6 +469,10 @@ function readBook(b) {
     category: str(b.category, "Subject", { req: true, max: 80 }),
     call: str(b.call, "Call number", { max: 40 }),
     copies: intRange(b.copies, "Copies", 1, 1000),
+    isbn: str(b.isbn, "ISBN", { max: 30 }),
+    publisher: str(b.publisher, "Publisher", { max: 150 }),
+    year: str(b.year, "Year", { max: 10 }),
+    description: str(b.description, "Description", { max: 3000 }),
   };
 }
 route("POST", "/api/books", "staff", async ({ req, env }) => {
@@ -468,12 +482,12 @@ route("POST", "/api/books", "staff", async ({ req, env }) => {
     const n = (await env.DB.prepare("SELECT COUNT(*) AS n FROM books").first()).n;
     call = b.category.slice(0, 3).toUpperCase() + "." + String(n + 100).padStart(3, "0");
   }
-  await env.DB.prepare("INSERT INTO books(id, title, author, category, call_no, copies) VALUES(?,?,?,?,?,?)").bind(newId(), b.title, b.author, b.category, call, b.copies).run();
+  await env.DB.prepare("INSERT INTO books(id, title, author, category, call_no, copies, isbn, publisher, year, description) VALUES(?,?,?,?,?,?,?,?,?,?)").bind(newId(), b.title, b.author, b.category, call, b.copies, b.isbn, b.publisher, b.year, b.description).run();
   return json({ ok: true }, 201);
 });
 route("PUT", "/api/books/:id", "staff", async ({ req, env, params }) => {
   const b = readBook(await body(req));
-  const r = await env.DB.prepare("UPDATE books SET title=?, author=?, category=?, call_no=?, copies=? WHERE id=?").bind(b.title, b.author, b.category, b.call, b.copies, params.id).run();
+  const r = await env.DB.prepare("UPDATE books SET title=?, author=?, category=?, call_no=?, copies=?, isbn=?, publisher=?, year=?, description=? WHERE id=?").bind(b.title, b.author, b.category, b.call, b.copies, b.isbn, b.publisher, b.year, b.description, params.id).run();
   if (!r.meta.changes) throw new HttpError(404, "Book not found.");
   return json({ ok: true });
 });
@@ -514,6 +528,10 @@ async function readEbookForm(req) {
     author: str(fd.get("author"), "Author", { req: true, max: 150 }),
     category: str(fd.get("category"), "Category", { req: true, max: 80 }),
     format: oneOf(fd.get("format") || "PDF", "Format", ["PDF", "EPUB", "DOCX", "Other"]),
+    description: str(fd.get("description"), "Abstract", { max: 3000 }),
+    publisher: str(fd.get("publisher"), "Publisher", { max: 150 }),
+    year: str(fd.get("year"), "Year", { max: 10 }),
+    itemType: oneOf(fd.get("itemType") || "Book", "Item type", ITEM_TYPES),
   };
   const f = fd.get("file");
   let upload = null;
@@ -525,6 +543,7 @@ async function readEbookForm(req) {
   }
   return { rec, upload };
 }
+const ITEM_TYPES = ["Book", "Journal", "Research paper", "Thesis", "Report", "Study guide", "Magazine", "Other"];
 const putFile = async (env, id, u) => {
   const key = `ebooks/${id}/${crypto.randomUUID()}.${u.ext}`;
   await env.FILES.put(key, u.data, { httpMetadata: { contentType: FILE_TYPES[u.ext] }, customMetadata: { originalName: u.name } });
@@ -536,8 +555,8 @@ route("POST", "/api/ebooks", "staff", async ({ req, env }) => {
   const id = newId();
   const key = upload ? await putFile(env, id, upload) : null;
   try {
-    await env.DB.prepare("INSERT INTO ebooks(id, title, author, category, format, added, file_key, file_name) VALUES(?,?,?,?,?,?,?,?)")
-      .bind(id, rec.title, rec.author, rec.category, rec.format, today(), key, upload ? upload.name : "").run();
+    await env.DB.prepare("INSERT INTO ebooks(id, title, author, category, format, added, file_key, file_name, description, publisher, year, item_type, status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,'Published')")
+      .bind(id, rec.title, rec.author, rec.category, rec.format, today(), key, upload ? upload.name : "", rec.description, rec.publisher, rec.year, rec.itemType).run();
   } catch (e) {
     if (key) await env.FILES.delete(key);
     throw e;
@@ -551,8 +570,8 @@ route("PUT", "/api/ebooks/:id", "staff", async ({ req, env, params }) => {
   const key = upload ? await putFile(env, params.id, upload) : cur.file_key;
   const name = upload ? upload.name : cur.file_name;
   try {
-    await env.DB.prepare("UPDATE ebooks SET title=?, author=?, category=?, format=?, file_key=?, file_name=? WHERE id=?")
-      .bind(rec.title, rec.author, rec.category, rec.format, key, name, params.id).run();
+    await env.DB.prepare("UPDATE ebooks SET title=?, author=?, category=?, format=?, file_key=?, file_name=?, description=?, publisher=?, year=?, item_type=? WHERE id=?")
+      .bind(rec.title, rec.author, rec.category, rec.format, key, name, rec.description, rec.publisher, rec.year, rec.itemType, params.id).run();
   } catch (e) {
     if (upload) await env.FILES.delete(key);
     throw e;
@@ -566,6 +585,105 @@ route("DELETE", "/api/ebooks/:id", "staff", async ({ env, params }) => {
   await env.DB.prepare("DELETE FROM ebooks WHERE id = ?").bind(params.id).run();
   if (cur.file_key) await env.FILES.delete(cur.file_key);
   return json({ ok: true });
+});
+
+/* ===== submit your work (any signed-in user); staff approve ===== */
+route("POST", "/api/submissions", "user", async ({ req, env, user }) => {
+  const { rec, upload } = await readEbookForm(req);
+  if (!upload) throw bad("Please attach the file you want to submit.");
+  const id = newId();
+  const key = await putFile(env, id, upload);
+  const status = user.role === "student" ? "Pending" : "Published";
+  try {
+    await env.DB.prepare("INSERT INTO ebooks(id, title, author, category, format, added, file_key, file_name, description, publisher, year, item_type, status, submitted_by) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)")
+      .bind(id, rec.title, rec.author, rec.category, rec.format, today(), key, upload.name, rec.description, rec.publisher, rec.year, rec.itemType, status, user.id).run();
+  } catch (e) { await env.FILES.delete(key); throw e; }
+  return json({ ok: true, status }, 201);
+});
+route("POST", "/api/ebooks/:id/approve", "staff", async ({ env, params }) => {
+  const r = await env.DB.prepare("UPDATE ebooks SET status = 'Published' WHERE id = ?").bind(params.id).run();
+  if (!r.meta.changes) throw new HttpError(404, "Item not found.");
+  return json({ ok: true });
+});
+
+/* ===== reservations (holds) ===== */
+route("POST", "/api/reservations", "user", async ({ req, env, user }) => {
+  if (user.role !== "student" || !user.studentId) throw new HttpError(403, "Only students can reserve books.");
+  const b = await body(req);
+  const bookId = str(b.bookId, "Book", { req: true, max: 60 });
+  const st = await env.DB.prepare("SELECT status FROM students WHERE id = ?").bind(user.studentId).first();
+  if (!st || st.status !== "Active") throw new HttpError(403, "Your registration must be approved before you can reserve books.");
+  const book = await env.DB.prepare("SELECT id FROM books WHERE id = ?").bind(bookId).first();
+  if (!book) throw new HttpError(404, "Book not found.");
+  const dup = await env.DB.prepare("SELECT 1 AS x FROM reservations WHERE book_id = ? AND student_id = ? AND status IN ('Pending','Ready')").bind(bookId, user.studentId).first();
+  if (dup) throw new HttpError(409, "You have already reserved this book.");
+  const open = (await env.DB.prepare("SELECT COUNT(*) AS n FROM reservations WHERE student_id = ? AND status IN ('Pending','Ready')").bind(user.studentId).first()).n;
+  if (open >= 5) throw new HttpError(409, "You can have at most 5 active reservations.");
+  await env.DB.prepare("INSERT INTO reservations(id, book_id, student_id, date, status) VALUES(?,?,?,?, 'Pending')").bind(newId(), bookId, user.studentId, today()).run();
+  return json({ ok: true }, 201);
+});
+route("POST", "/api/reservations/:id/cancel", "user", async ({ env, params, user }) => {
+  const own = user.role === "student" ? " AND student_id = ?" : "";
+  const st = env.DB.prepare("UPDATE reservations SET status = 'Cancelled' WHERE id = ? AND status IN ('Pending','Ready')" + own);
+  const r = await (own ? st.bind(params.id, user.studentId) : st.bind(params.id)).run();
+  if (!r.meta.changes) throw new HttpError(404, "Reservation not found.");
+  return json({ ok: true });
+});
+route("POST", "/api/reservations/:id/ready", "staff", async ({ env, params }) => {
+  const r = await env.DB.prepare("UPDATE reservations SET status = 'Ready' WHERE id = ? AND status = 'Pending'").bind(params.id).run();
+  if (!r.meta.changes) throw new HttpError(404, "Reservation not found.");
+  return json({ ok: true });
+});
+route("POST", "/api/reservations/:id/fulfil", "staff", async ({ env, params }) => {
+  const res = await env.DB.prepare("SELECT id, book_id, student_id FROM reservations WHERE id = ? AND status IN ('Pending','Ready')").bind(params.id).first();
+  if (!res) throw new HttpError(404, "Reservation not found.");
+  const issued = today();
+  const r = await env.DB.prepare(
+    `INSERT INTO loans(id, book_id, student_id, issued, due, returned)
+     SELECT ?1, ?2, ?3, ?4, ?5, NULL
+      WHERE (SELECT copies FROM books WHERE id = ?2) > (SELECT COUNT(*) FROM loans WHERE book_id = ?2 AND returned IS NULL)
+        AND EXISTS (SELECT 1 FROM students WHERE id = ?3 AND status = 'Active')`
+  ).bind(newId(), res.book_id, res.student_id, issued, addDays(issued, 14)).run();
+  if (!r.meta.changes) throw new HttpError(409, "No copy is available yet, or the student is not active.");
+  await env.DB.prepare("UPDATE reservations SET status = 'Fulfilled' WHERE id = ?").bind(res.id).run();
+  return json({ ok: true });
+});
+
+/* ===== renew a loan (student) ===== */
+route("POST", "/api/loans/:id/renew", "user", async ({ env, params, user }) => {
+  if (user.role !== "student" || !user.studentId) throw new HttpError(403, "Only students can renew their own loans.");
+  const l = await env.DB.prepare("SELECT id, book_id, due, returned, renewals FROM loans WHERE id = ? AND student_id = ?").bind(params.id, user.studentId).first();
+  if (!l || l.returned) throw new HttpError(404, "Loan not found.");
+  if (l.due < today()) throw new HttpError(409, "This book is overdue. Please return it to the library.");
+  if (l.renewals >= 2) throw new HttpError(409, "This loan has already been renewed twice.");
+  const waiting = await env.DB.prepare("SELECT 1 AS x FROM reservations WHERE book_id = ? AND student_id != ? AND status IN ('Pending','Ready')").bind(l.book_id, user.studentId).first();
+  if (waiting) throw new HttpError(409, "Another student has reserved this book, so it cannot be renewed.");
+  await env.DB.prepare("UPDATE loans SET due = ?, renewals = renewals + 1 WHERE id = ?").bind(addDays(l.due, 7), l.id).run();
+  return json({ ok: true });
+});
+
+/* ===== public library statistics ===== */
+route("GET", "/api/statistics", "public", async ({ env }) => {
+  const db = env.DB;
+  const month = new Date(); month.setUTCDate(1); month.setUTCMonth(month.getUTCMonth() - 5);
+  const since = month.toISOString().slice(0, 7);
+  const res = await db.batch([
+    db.prepare("SELECT COUNT(*) AS titles, COALESCE(SUM(copies),0) AS copies FROM books"),
+    db.prepare("SELECT COUNT(*) AS n, COALESCE(SUM(downloads),0) AS downloads FROM ebooks WHERE status = 'Published'"),
+    db.prepare("SELECT COUNT(*) AS n FROM students WHERE status = 'Active'"),
+    db.prepare("SELECT COUNT(*) AS total, SUM(CASE WHEN returned IS NULL THEN 1 ELSE 0 END) AS out FROM loans"),
+    db.prepare("SELECT b.title, b.author, COUNT(*) AS n FROM loans l JOIN books b ON b.id = l.book_id GROUP BY b.id ORDER BY n DESC, b.title LIMIT 5"),
+    db.prepare("SELECT category, COUNT(*) AS n FROM books GROUP BY category ORDER BY n DESC LIMIT 8"),
+    db.prepare("SELECT category, COUNT(*) AS n FROM ebooks WHERE status = 'Published' GROUP BY category ORDER BY n DESC LIMIT 8"),
+    db.prepare("SELECT substr(issued,1,7) AS month, COUNT(*) AS n FROM loans WHERE substr(issued,1,7) >= ? GROUP BY month ORDER BY month").bind(since),
+    db.prepare("SELECT title, author, downloads FROM ebooks WHERE status = 'Published' AND downloads > 0 ORDER BY downloads DESC LIMIT 5"),
+  ]);
+  const r = res.map(x => x.results);
+  return json({
+    titles: r[0][0].titles, copies: r[0][0].copies, ebooks: r[1][0].n, downloads: r[1][0].downloads,
+    students: r[2][0].n, loans: r[3][0].total || 0, out: r[3][0].out || 0,
+    topBorrowed: r[4], bookCategories: r[5], ebookCategories: r[6], monthly: r[7], topDownloads: r[8],
+  });
 });
 
 /* ---------- entry point ---------- */

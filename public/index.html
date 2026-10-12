@@ -255,6 +255,29 @@ td .acts{display:flex;gap:.35rem;flex-wrap:nowrap}
 .kv{display:grid;grid-template-columns:160px 1fr;gap:.45rem 1rem;font-size:.95rem}
 .kv dt{color:var(--muted)}.kv dd{margin:0;font-weight:500}
 @media(max-width:560px){.kv{grid-template-columns:1fr}}
+.cover{--h:215;flex:none;width:74px;aspect-ratio:2/3;border-radius:4px 8px 8px 4px;background:linear-gradient(160deg,hsl(var(--h) 45% 34%),hsl(var(--h) 55% 18%));color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.25rem;padding:.4rem;text-align:center;box-shadow:inset 4px 0 0 rgba(255,255,255,.18),0 2px 6px rgba(0,0,0,.18);overflow:hidden}
+.cover span{font:700 1.5rem var(--head);letter-spacing:.03em}.cover small{font-size:.58rem;line-height:1.15;opacity:.85;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cover.big{width:min(210px,100%)}.cover.big span{font-size:3rem}.cover.big small{font-size:.8rem}
+.bk{display:flex;gap:1rem;align-items:flex-start;border:1px solid var(--line);border-radius:var(--r);background:#fff;padding:1rem 1.1rem;margin-bottom:.8rem}
+.bk .info{flex:1;min-width:0}.bk h4{margin:0 0 .2rem}.bk h4 a{color:var(--navy)}.bk small{display:block;color:var(--muted)}
+.bk .acts{display:flex;flex-direction:column;gap:.45rem;align-items:stretch;flex:none}
+@media(max-width:640px){.bk{flex-wrap:wrap}.bk .acts{flex-direction:row;flex-wrap:wrap;width:100%}}
+.chips{display:flex;gap:.45rem;flex-wrap:wrap;align-items:center;margin:-.4rem 0 1rem;font-size:.85rem;color:var(--muted)}
+.chips button{border:1px solid var(--line);background:#fff;border-radius:99px;padding:.15rem .7rem;font:inherit;cursor:pointer;color:var(--blue)}
+.chips button:hover{background:var(--paper)}
+.fbar{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1rem}.fbar input,.fbar select{padding:.7rem .9rem;border:1px solid #c5cddd;border-radius:6px;font:inherit;background:#fff}.fbar input{flex:1;min-width:200px}
+.shelf{display:flex;gap:1.2rem;overflow-x:auto;padding:.4rem .2rem 1rem;scroll-snap-type:x proximity}
+.shelfbook{flex:none;width:130px;scroll-snap-align:start;color:var(--ink);text-decoration:none;display:flex;flex-direction:column;gap:.4rem}
+.shelfbook .cover{width:130px}.shelfbook b{font-size:.88rem;line-height:1.25}.shelfbook small{color:var(--muted);font-size:.8rem}
+.colls{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:.7rem;margin-bottom:1.4rem}
+.coll{border:1px solid var(--line);background:#fff;border-radius:var(--r);padding:.8rem 1rem;text-align:left;font:inherit;cursor:pointer;border-left:4px solid var(--gold);color:var(--navy)}
+.coll b{display:block}.coll small{color:var(--muted)}.coll:hover,.coll.on{background:var(--paper);border-color:var(--blue)}
+.dbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:.8rem}
+.dbs a{display:block;border:1px solid var(--line);border-radius:var(--r);background:#fff;padding:.9rem 1rem;color:var(--navy);text-decoration:none}
+.dbs a:hover{border-color:var(--blue);box-shadow:0 4px 14px rgba(20,40,75,.1)}.dbs b{display:block}.dbs small{color:var(--muted)}
+.detail{display:grid;grid-template-columns:230px 1fr;gap:2rem;align-items:start}@media(max-width:720px){.detail{grid-template-columns:1fr}}
+.abs{color:var(--ink);line-height:1.6;margin:.4rem 0 0}.item details{margin-top:.35rem}.item details summary{cursor:pointer;color:var(--blue);font-weight:600;font-size:.88rem}
+html.hc{--ink:#000;--muted:#1c1c1c;--line:#000}html.hc a{text-decoration:underline}html.hc .strip,html.hc .nav{background:#000!important}html.hc .btn{border-color:#000}
 .loginwrap{min-height:70vh;display:grid;place-items:center;padding:3rem 1rem;background:var(--paper)}
 .loginbox{width:min(440px,100%)}
 .roles{display:grid;gap:.7rem;margin:1.1rem 0 .4rem}
@@ -327,7 +350,7 @@ const PROGRAMMES = [
 const SW = {
  "Home":"Mwanzo","About Us":"Kuhusu Sisi","Academics":"Taaluma","Programmes":"Programu","Library & E-Library":"Maktaba na Maktaba Mtandao",
  "Online Catalogue (OPAC)":"Katalogi ya Mtandaoni (OPAC)","E-Library":"Maktaba Mtandao","News & Events":"Habari na Matukio","Contact Us":"Wasiliana Nasi",
- "Register":"Jisajili","Login":"Ingia","Dashboard":"Dashibodi","Log out":"Toka","FAQs":"Maswali","Staff Mail":"Barua pepe ya Wafanyakazi",
+ "Register":"Jisajili","Login":"Ingia","Statistics":"Takwimu","Book bag":"Mkoba wa vitabu","Submit your work":"Wasilisha kazi yako","Dashboard":"Dashibodi","Log out":"Toka","FAQs":"Maswali","Staff Mail":"Barua pepe ya Wafanyakazi",
  "Welcome to St Joseph's College":"Karibu St Joseph's College","Apply Now":"Omba Sasa","Register as a student":"Jisajili kama mwanafunzi",
  "Explore Our Programmes":"Tazama Programu Zetu","View All":"Tazama Zote","Read More":"Soma Zaidi","Our Facilities":"Vifaa Vyetu",
  "Latest News":"Habari za Karibuni","Events":"Matukio","Announcements":"Matangazo","Get Answers to Some of Your Questions":"Majibu ya Maswali Yako",
@@ -460,6 +483,8 @@ function publicShell(inner, active) {
   return `
   <div class="strip"><div class="wrap">
     <a href="#/faqs">${t("FAQs")}</a><a href="#/contact">${t("Contact Us")}</a><a href="${SITE.staffMail}">${t("Staff Mail")}</a>
+    <a href="#/bag">${t("Book bag")} (${getBag().length})</a>
+    <span style="display:inline-flex;gap:.5rem" role="group" aria-label="Accessibility"><button data-act="fontDown" aria-label="Smaller text" title="Smaller text">A&minus;</button><button data-act="fontUp" aria-label="Larger text" title="Larger text">A+</button><button data-act="contrast" aria-label="High contrast" title="High contrast">&#9680;</button></span>
     <button data-act="lang">${lang === "sw" ? "ENGLISH" : "KISWAHILI"}</button>
   </div></div>
   <header class="brandbar"><div class="wrap">
@@ -474,7 +499,7 @@ function publicShell(inner, active) {
       <li><a class="top${active === "programmes" ? " on" : ""}" href="#/programmes">${t("Academics")}</a>
         <div class="sub"><a href="#/programmes">${t("Programmes")}</a><a href="#/register/student">${t("Student Registration")}</a></div></li>
       <li><a class="top${active === "library" ? " on" : ""}" href="#/library">${t("Library & E-Library")}</a>
-        <div class="sub"><a href="#/opac">${t("Online Catalogue (OPAC)")}</a><a href="#/elibrary">${t("E-Library")}</a><a href="#/library">${lang === "sw" ? "Kuhusu maktaba" : "About the library"}</a></div></li>
+        <div class="sub"><a href="#/opac">${t("Online Catalogue (OPAC)")}</a><a href="#/elibrary">${t("E-Library")}</a><a href="#/statistics">${t("Statistics")}</a><a href="#/submit">${t("Submit your work")}</a><a href="#/bag">${t("Book bag")}</a><a href="#/library">${lang === "sw" ? "Kuhusu maktaba" : "About the library"}</a></div></li>
       ${nav("#/news", "News & Events", "news")}
       ${nav("#/contact", "Contact Us", "contact")}
     </ul>
@@ -532,7 +557,7 @@ function pageHome() {
 
   const stats = `<div class="statband"><div class="wrap grid g4">
     <div><b>${db.stats.students}</b><span>${t("Students")}</span></div><div><b>${db.books.length}</b><span>${t("Books in catalogue")}</span></div>
-    <div><b>${db.ebooks.length}</b><span>${t("Digital resources")}</span></div><div><b>${PROGRAMMES.length}</b><span>${t("Programmes offered")}</span></div></div></div>`;
+    <div><b>${db.ebooks.filter(e => e.status !== "Pending").length}</b><span>${t("Digital resources")}</span></div><div><b>${PROGRAMMES.length}</b><span>${t("Programmes offered")}</span></div></div></div>`;
 
   const programmes = `<section class="sec"><div class="wrap">
     <div class="sechead"><div><h2>${t("Explore Our Programmes")}</h2><p>${lang === "sw" ? "Chagua programu inayokufaa na jisajili mtandaoni." : "Pick the programme that fits you and register online."}</p></div><a class="btn" href="#/register/student">${t("Apply Now")}</a></div>
@@ -576,7 +601,7 @@ function pageHome() {
       ${[["lib","Library and reading hall","Shelves, study tables and a catalogue desk"],["laptop","Digital reading room","Computers for the OPAC and E-Library"],["reading","Quiet research corner","Space for individual study"],["hall","Graduation hall","Ceremonies and college events"]].map(f => `<div class="fac"><img src="${img(f[0], 800)}" alt="" loading="lazy"><div><h4>${f[1]}</h4><span>${f[2]}</span></div></div>`).join("")}
     </div></div></section>`;
 
-  return hero + stats + programmes + cats + vmm + about + events + news + fac + faqSection() + contactSection();
+  return hero + stats + featuredBooks() + programmes + cats + vmm + about + events + news + fac + openDbs() + faqSection() + contactSection();
 }
 
 function progCard(p) {
@@ -645,43 +670,168 @@ function pageLibrary() {
       <article class="card"><div class="ph"><img src="${img("lib", 900)}" alt="" loading="lazy"></div><div class="bd"><h3>${t("Online Catalogue (OPAC)")}</h3><p>Search every book in the library by title, author, subject or call number. See at once whether a copy is available.</p><a class="btn" href="#/opac" style="align-self:flex-start">${t("Find a book")}</a></div></article>
       <article class="card"><div class="ph"><img src="${img("laptop", 900)}" alt="" loading="lazy"></div><div class="bd"><h3>${t("E-Library")}</h3><p>Read softcopy books and guides uploaded by the library. Access is protected by a personal account.</p><a class="btn" href="#/elibrary" style="align-self:flex-start">Open the E-Library</a></div></article>
     </div>
+    <div class="grid g3" style="margin-bottom:2.4rem">
+      <div class="panel"><h4>Book bag</h4><p style="color:var(--muted)">Collect titles while you search, then print or download the list.</p><a class="btn sm ghost" href="#/bag">Open the book bag</a></div>
+      <div class="panel"><h4>Library statistics</h4><p style="color:var(--muted)">See collections, loans per month and the most borrowed books.</p><a class="btn sm ghost" href="#/statistics">View statistics</a></div>
+      <div class="panel"><h4>Submit your work</h4><p style="color:var(--muted)">Share a paper, thesis or study guide in the E-Library.</p><a class="btn sm ghost" href="#/submit">Submit</a></div>
+    </div>
     <div class="sechead"><h2>What the systems give the college</h2></div>
     <div class="grid g4">${mods.map(m => `<div class="panel"><h4>${m[0]}</h4><p style="color:var(--muted);margin:0">${m[1]}</p></div>`).join("")}</div>
-  </div></section>`;
+  </div></section>` + openDbs();
 }
 
 function pageOpac() {
   const cats = [...new Set(db.books.map(b => b.category))].sort();
+  const hist = getHist();
   return pageHead(t("Online Catalogue (OPAC)"), "Search the library collection") + `<section class="sec"><div class="wrap">
-    <div class="searchbar" role="search">
-      <input id="opacq" type="search" placeholder="Title, author or call number" aria-label="Search the catalogue" data-live="opac" style="padding:.7rem .9rem;border:1px solid #c5cddd;border-radius:6px;font:inherit">
-      <select id="opaccat" data-live="opac" aria-label="Subject" style="padding:.7rem .9rem;border:1px solid #c5cddd;border-radius:6px;font:inherit"><option value="">All subjects</option>${cats.map(c => `<option>${esc(c)}</option>`).join("")}</select>
+    <div class="fbar" role="search">
+      <input id="opacq" type="search" placeholder="Search the catalogue" aria-label="Search the catalogue" data-live="opac">
+      <select id="opacfield" data-live="opac" aria-label="Search in"><option value="all">Any field</option><option value="title">Title</option><option value="author">Author</option><option value="category">Subject</option><option value="isbn">ISBN</option><option value="call">Call number</option><option value="publisher">Publisher</option></select>
+      <select id="opaccat" data-live="opac" aria-label="Subject"><option value="">All subjects</option>${cats.map(c => `<option>${esc(c)}</option>`).join("")}</select>
+      <select id="opacav" data-live="opac" aria-label="Availability"><option value="">Any availability</option><option value="1">Available now</option></select>
+      <select id="opacsort" data-live="opac" aria-label="Sort by"><option value="title">Sort: Title</option><option value="author">Sort: Author</option><option value="year">Sort: Newest</option></select>
     </div>
-    <div id="opacres">${opacList("", "")}</div></div></section>`;
+    <div class="chips" id="opachist">${histChips(hist)}</div>
+    <div id="opacres">${opacList()}</div></div></section>`;
+}
+const histChips = h => h.length ? `Recent searches: ${h.map(x => `<button type="button" data-act="histPick" data-q="${esc(x)}">${esc(x)}</button>`).join("")} <button type="button" data-act="histClear" style="color:var(--bad)">Clear</button>` : "";
+const initials = t0 => String(t0 || "?").split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0]).join("").toUpperCase();
+const hue = t0 => { let h = 0; for (const c of String(t0)) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+const cover = (b, big) => `<div class="cover${big ? " big" : ""}" style="--h:${hue(b.title)}" aria-hidden="true"><span>${esc(initials(b.title))}</span><small>${esc(b.author)}</small></div>`;
+const jget = (k, d) => { try { return JSON.parse(store.get(k) || "") ?? d; } catch (e) { return d; } };
+const getBag = () => jget("sjc_bag", []);
+const setBag = v => store.set("sjc_bag", JSON.stringify(v));
+const getHist = () => jget("sjc_hist", []);
+const OPEN_DBS = [
+  ["Directory of Open Access Books (DOAB)", "https://directory.doabooks.org", "Free scholarly books"],
+  ["African Journals Online (AJOL)", "https://www.ajol.info", "Peer-reviewed African journals"],
+  ["Directory of Open Access Journals (DOAJ)", "https://doaj.org", "Open access journals and articles"],
+  ["Open Library", "https://openlibrary.org", "Search and borrow millions of books"],
+  ["OpenStax", "https://openstax.org", "Free college textbooks"],
+  ["Project Gutenberg", "https://www.gutenberg.org", "Classic books in the public domain"]
+];
+const openDbs = () => `<section class="sec"><div class="wrap"><div class="sechead"><div><h2>Online databases</h2><p>Free external collections for study and research.</p></div></div>
+  <div class="dbs">${OPEN_DBS.map(d => `<a href="${d[1]}" target="_blank" rel="noopener"><b>${esc(d[0])}</b><small>${esc(d[2])}</small></a>`).join("")}</div></div></section>`;
+function featuredBooks() {
+  const all = db.books; if (!all.length) return "";
+  const off = Math.floor(Date.now() / 86400000) % all.length;
+  const pick = [...all.slice(off), ...all.slice(0, off)].slice(0, 8);
+  return `<section class="sec alt"><div class="wrap"><div class="sechead"><div><h2>Featured books</h2><p>A rotating selection from the library catalogue.</p></div><a class="btn ghost" href="#/opac">Browse the catalogue</a></div>
+    <div class="shelf">${pick.map(b => `<a class="shelfbook" href="#/opac/book/${b.id}">${cover(b)}<b>${esc(b.title)}</b><small>${esc(b.author)}</small></a>`).join("")}</div></div></section>`;
 }
 function bookAvail(b) {
   const out = b.out || 0; // counted on the server so it is correct for every visitor
   return { out, left: Math.max(0, b.copies - out) };
 }
-function opacList(q, cat) {
-  q = q.toLowerCase();
-  const r = db.books.filter(b => (!cat || b.category === cat) && (!q || [b.title, b.author, b.call, b.category].join(" ").toLowerCase().includes(q)));
+function opacList(q = "", cat = "", field = "all", avail = "", sort = "title") {
+  q = q.trim().toLowerCase();
+  let r = db.books.filter(b => {
+    if (cat && b.category !== cat) return false;
+    if (avail && !bookAvail(b).left) return false;
+    if (!q) return true;
+    const hay = field === "all" ? [b.title, b.author, b.call, b.category, b.isbn, b.publisher, b.year, b.description].join(" ") : String(b[field] || "");
+    return hay.toLowerCase().includes(q);
+  });
+  r = [...r].sort((a, b) => sort === "year" ? String(b.year || "").localeCompare(String(a.year || "")) || a.title.localeCompare(b.title) : String(a[sort] || "").localeCompare(String(b[sort] || ""), undefined, { sensitivity: "base" }));
   if (!r.length) return `<div class="empty">No books match your search. Try a different word or choose All subjects.</div>`;
+  const bag = getBag(), u = me();
   return `<p style="color:var(--muted)">${r.length} ${r.length === 1 ? "result" : "results"}</p>` + r.map(b => {
-    const a = bookAvail(b);
-    return `<div class="res"><div><h4>${esc(b.title)}</h4><small>${esc(b.author)} &middot; ${esc(b.category)} &middot; Call no. ${esc(b.call)}</small></div>
-      <span class="badge ${a.left ? "ok" : "bad"}">${a.left ? `${t("Available")} (${a.left} of ${b.copies})` : t("On loan")}</span></div>`;
+    const a = bookAvail(b), inBag = bag.includes(b.id);
+    return `<div class="bk">${cover(b)}<div class="info"><h4><a href="#/opac/book/${b.id}">${esc(b.title)}</a></h4>
+      <small>${esc(b.author)}${b.year ? " &middot; " + esc(b.year) : ""}${b.publisher ? " &middot; " + esc(b.publisher) : ""}</small>
+      <small>${esc(b.category)} &middot; Call no. ${esc(b.call)}${b.isbn ? " &middot; ISBN " + esc(b.isbn) : ""}</small>
+      <p style="margin:.5rem 0 0"><span class="badge ${a.left ? "ok" : "bad"}">${a.left ? `${t("Available")} (${a.left} of ${b.copies})` : t("On loan")}</span></p></div>
+      <div class="acts"><a class="btn sm ghost" href="#/opac/book/${b.id}">Details</a>
+        <button class="btn sm ghost" data-act="${inBag ? "bagRemove" : "bagAdd"}" data-id="${b.id}">${inBag ? "Remove from book bag" : "Add to book bag"}</button>
+        ${u?.role === "student" ? `<button class="btn sm" data-act="reserve" data-id="${b.id}">Reserve</button>` : ""}</div></div>`;
   }).join("");
 }
+function opacRefresh() {
+  const v = id => $("#" + id)?.value || "";
+  const box = $("#opacres"); if (!box) return;
+  box.innerHTML = opacList(v("opacq"), v("opaccat"), v("opacfield") || "all", v("opacav"), v("opacsort") || "title");
+}
+function pageBook(id) {
+  const b = book(id);
+  if (!b) return pageHead("Book not found", "") + `<section class="sec"><div class="wrap"><div class="empty">This book is not in the catalogue. <a href="#/opac">Back to the catalogue</a></div></div></section>`;
+  const a = bookAvail(b), inBag = getBag().includes(b.id), u = me();
+  const same = db.books.filter(x => x.category === b.category && x.id !== b.id).slice(0, 6);
+  const dl = [["Author", b.author], ["Subject", b.category], ["Call number", b.call], ["ISBN", b.isbn], ["Publisher", b.publisher], ["Year", b.year], ["Copies", `${b.copies} (${a.left} available)`]].filter(x => x[1]);
+  return pageHead(b.title, b.author) + `<section class="sec"><div class="wrap"><div class="detail"><div>${cover(b, true)}</div><div>
+    <p><span class="badge ${a.left ? "ok" : "bad"}">${a.left ? `${t("Available")} (${a.left} of ${b.copies})` : t("On loan")}</span></p>
+    <dl class="kv">${dl.map(x => `<dt>${x[0]}</dt><dd>${esc(x[1])}</dd>`).join("")}</dl>
+    ${b.description ? `<h3 style="margin-top:1.4rem">About this book</h3><p class="abs">${esc(b.description)}</p>` : ""}
+    <p style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1.4rem"><button class="btn ghost" data-act="${inBag ? "bagRemove" : "bagAdd"}" data-id="${b.id}">${inBag ? "Remove from book bag" : "Add to book bag"}</button>
+      ${u?.role === "student" ? `<button class="btn" data-act="reserve" data-id="${b.id}">Reserve this book</button>` : (u ? "" : `<a class="btn" href="#/login/student">Sign in to reserve</a>`)}<a class="btn ghost" href="#/opac">&larr; Back to the catalogue</a></p></div></div>
+    ${same.length ? `<div class="sechead" style="margin-top:2.4rem"><h2>More in ${esc(b.category)}</h2></div><div class="shelf">${same.map(x => `<a class="shelfbook" href="#/opac/book/${x.id}">${cover(x)}<b>${esc(x.title)}</b><small>${esc(x.author)}</small></a>`).join("")}</div>` : ""}</div></section>`;
+}
+function pageBag() {
+  const ids = getBag(), items = ids.map(book).filter(Boolean);
+  return pageHead("Book bag", "Collect titles to find on the shelf") + `<section class="sec"><div class="wrap">
+    ${items.length ? `<div class="tools"><span class="sp"></span><button class="btn ghost sm" data-act="bagCsv">Download list (CSV)</button><button class="btn ghost sm" data-act="bagPrint">Print</button><button class="btn ghost sm" data-act="bagClear">Empty the bag</button></div>
+      <div id="printArea">${items.map(b => { const a = bookAvail(b); return `<div class="bk">${cover(b)}<div class="info"><h4><a href="#/opac/book/${b.id}">${esc(b.title)}</a></h4><small>${esc(b.author)} &middot; ${esc(b.category)}</small><small>Call no. ${esc(b.call)}</small><p style="margin:.5rem 0 0"><span class="badge ${a.left ? "ok" : "bad"}">${a.left ? t("Available") : t("On loan")}</span></p></div>
+        <div class="acts"><button class="btn sm ghost" data-act="bagRemove" data-id="${b.id}">Remove</button>${me()?.role === "student" ? `<button class="btn sm" data-act="reserve" data-id="${b.id}">Reserve</button>` : ""}</div></div>`; }).join("")}</div>`
+      : `<div class="empty">Your book bag is empty. <a href="#/opac">Search the catalogue</a> and choose "Add to book bag".</div>`}
+    <p class="note" style="margin-top:1rem">The book bag is kept in this browser only. Print or download the list and take it to the library desk.</p></div></section>`;
+}
 
+let elState = { q: "", cat: "", type: "", sort: "new" };
 function pageElibrary() {
   const u = me();
-  const items = db.ebooks.map(e => `<div class="res"><div><h4>${esc(e.title)}</h4><small>${esc(e.author)} &middot; ${esc(e.category)} &middot; ${esc(e.format)} &middot; added ${fmt(e.added)}</small></div>
+  const cats = {}; db.ebooks.filter(e => e.status === "Published").forEach(e => cats[e.category] = (cats[e.category] || 0) + 1);
+  const types = [...new Set(db.ebooks.map(e => e.itemType || "Book"))].sort();
+  return pageHead(t("E-Library"), "Digital books, journals, theses and study guides") + `<section class="sec"><div class="wrap">
+    ${u ? "" : `<div class="note" style="margin-bottom:1.2rem">You can browse the titles below. <a href="#/login">Login</a> to read or download them.</div>`}
+    <div class="sechead"><div><h2>Collections</h2><p>Browse by subject.</p></div><a class="btn" href="#/submit">Submit your work</a></div>
+    <div class="colls"><button class="coll${elState.cat ? "" : " on"}" data-act="elColl" data-cat=""><b>All collections</b><small>${db.ebooks.filter(e => e.status === "Published").length} items</small></button>
+      ${Object.entries(cats).sort().map(([c, n]) => `<button class="coll${elState.cat === c ? " on" : ""}" data-act="elColl" data-cat="${esc(c)}"><b>${esc(c)}</b><small>${n} item${n === 1 ? "" : "s"}</small></button>`).join("")}</div>
+    <div class="fbar" role="search"><input id="elq" type="search" placeholder="Search title, author, abstract or publisher" aria-label="Search the E-Library" data-live="elib" value="${esc(elState.q)}">
+      <select id="eltype" data-live="elib" aria-label="Item type"><option value="">All item types</option>${types.map(x => `<option${elState.type === x ? " selected" : ""}>${esc(x)}</option>`).join("")}</select>
+      <select id="elsort" data-live="elib" aria-label="Sort by"><option value="new">Sort: Newest</option><option value="title"${elState.sort === "title" ? " selected" : ""}>Sort: Title</option><option value="pop"${elState.sort === "pop" ? " selected" : ""}>Sort: Most downloaded</option></select></div>
+    <div id="elres">${elList()}</div></div></section>` + openDbs();
+}
+function elList() {
+  const u = me(), q = elState.q.trim().toLowerCase();
+  let r = db.ebooks.filter(e => (!elState.cat || e.category === elState.cat) && (!elState.type || (e.itemType || "Book") === elState.type)
+    && (!q || [e.title, e.author, e.description, e.publisher, e.category, e.year].join(" ").toLowerCase().includes(q)));
+  r = [...r].sort((a, b) => elState.sort === "title" ? a.title.localeCompare(b.title) : elState.sort === "pop" ? (b.downloads || 0) - (a.downloads || 0) : String(b.added).localeCompare(String(a.added)));
+  if (!r.length) return `<div class="empty">No digital resources match. Try a different word or collection.</div>`;
+  return `<p style="color:var(--muted)">${r.length} ${r.length === 1 ? "item" : "items"}</p>` + r.map(e => `<div class="res item"><div style="flex:1;min-width:0"><h4>${esc(e.title)}</h4>
+    <small>${esc(e.author)} &middot; ${esc(e.itemType || "Book")} &middot; ${esc(e.category)}${e.year ? " &middot; " + esc(e.year) : ""}${e.publisher ? " &middot; " + esc(e.publisher) : ""} &middot; ${esc(e.format)} &middot; added ${fmt(e.added)}${e.downloads ? ` &middot; ${e.downloads} download${e.downloads === 1 ? "" : "s"}` : ""}</small>
+    ${e.status === "Pending" ? `<p style="margin:.4rem 0 0"><span class="badge warn">Waiting for library staff approval</span></p>` : ""}
+    ${e.description ? `<details><summary>Show abstract</summary><p class="abs">${esc(e.description)}</p></details>` : ""}</div>
     ${u ? (e.hasFile ? `<a class="btn sm" href="/api/ebooks/${e.id}/file" download="${esc(e.fileName || e.title)}" target="_blank" rel="noopener">Read / download</a>` : `<span class="badge gray">File not uploaded yet</span>`)
-        : `<a class="btn sm ghost" href="#/login">Sign in to read</a>`}</div>`).join("");
-  return pageHead(t("E-Library"), "Softcopy books and study guides") + `<section class="sec"><div class="wrap">
-    ${u ? "" : `<div class="note" style="margin-bottom:1.2rem">You can browse the titles below. Sign in with your student account to read or download them.</div>`}
-    ${items || `<div class="empty">No digital resources have been added yet.</div>`}</div></section>`;
+        : `<a class="btn sm ghost" href="#/login">Login to read</a>`}</div>`).join("");
+}
+function elRefresh() {
+  elState.q = $("#elq")?.value || ""; elState.type = $("#eltype")?.value || ""; elState.sort = $("#elsort")?.value || "new";
+  const box = $("#elres"); if (box) box.innerHTML = elList();
+}
+function pageSubmit() {
+  const u = me();
+  if (!u) return pageHead("Submit your work", "Share a paper, thesis or study guide") + `<section class="sec"><div class="wrap"><div class="note">Please <a href="#/login">login</a> to submit your work to the E-Library. New students can <a href="#/register/student">register</a> first.</div></div></section>`;
+  return pageHead("Submit your work", "Share a paper, thesis or study guide with the college") + `<section class="sec"><div class="wrap formsplit"><div class="panel" id="subpanel">
+    <form data-form="submit"><div class="fgrid">${fld("Title", "title", { required: true, full: true })}${fld("Author(s)", "author", { required: true })}${fld("Subject / collection", "category", { required: true, hint: "Example: Literature, Business" })}
+      ${fld("Item type", "itemType", { options: ITEM_TYPES, value: "Research paper" })}${fld("Year", "year")}${fld("Publisher or department", "publisher", { full: true })}
+      ${fld("Abstract", "description", { textarea: true, full: true, hint: "A short summary readers will see" })}
+      <div class="field full"><label>File <i>*</i></label><input type="file" name="file" required accept=".pdf,.epub,.doc,.docx,.txt"><small>PDF, EPUB, DOC, DOCX or TXT. Up to 20 MB.</small></div></div>
+      <button class="btn gold" style="margin-top:1rem">Submit</button></form></div>
+    <aside><h3>How it works</h3><ol class="steps"><li>Fill in the details and attach your file.</li><li>${u.role === "student" ? "Library staff review it before it appears in the E-Library." : "As a staff member your item is published immediately."}</li><li>Readers can then find it by collection, title or author.</li></ol></aside></div></section>`;
+}
+const ITEM_TYPES = ["Book", "Journal", "Research paper", "Thesis", "Report", "Study guide", "Magazine", "Other"];
+const mapBars = (rows, label, val) => { const max = Math.max(1, ...rows.map(r => r[val])); return rows.length ? `<div class="bars">${rows.map(r => `<div class="row"><span>${esc(r[label])}</span><span class="track"><span class="fill" style="width:${r[val] / max * 100}%"></span></span><b>${r[val]}</b></div>`).join("")}</div>` : `<div class="empty">No data yet.</div>`; };
+function pageStats() {
+  return pageHead("Library statistics", "Collections, loans and downloads at a glance") + `<section class="sec"><div class="wrap" id="statbody"><div class="empty">Loading statistics...</div></div></section>`;
+}
+function statsHtml(d) {
+  return `<div class="stats">
+    <div class="stat"><b>${d.titles}</b><span>Book titles</span></div><div class="stat g"><b>${d.copies}</b><span>Physical copies</span></div><div class="stat o"><b>${d.ebooks}</b><span>Digital items</span></div>
+    <div class="stat"><b>${d.downloads}</b><span>E-Library downloads</span></div><div class="stat g"><b>${d.students}</b><span>Active students</span></div><div class="stat o"><b>${d.loans}</b><span>Loans recorded</span></div><div class="stat r"><b>${d.out}</b><span>Books on loan now</span></div></div>
+  <div class="dgrid"><div class="panel"><h3>Loans per month</h3>${mapBars(d.monthly, "month", "n")}</div>
+    <div class="panel"><h3>Most borrowed books</h3>${d.topBorrowed.length ? d.topBorrowed.map(x => `<div class="listrow" style="padding:.55rem 0"><div style="flex:1"><strong>${esc(x.title)}</strong><br><small style="color:var(--muted)">${esc(x.author)}</small></div><span class="badge ok">${x.n} loan${x.n === 1 ? "" : "s"}</span></div>`).join("") : `<div class="empty">No loans yet.</div>`}</div>
+    <div class="panel"><h3>Books by subject</h3>${mapBars(d.bookCategories, "category", "n")}</div>
+    <div class="panel"><h3>Digital items by collection</h3>${mapBars(d.ebookCategories, "category", "n")}</div>
+    <div class="panel"><h3>Most downloaded digital items</h3>${d.topDownloads.length ? d.topDownloads.map(x => `<div class="listrow" style="padding:.55rem 0"><div style="flex:1"><strong>${esc(x.title)}</strong><br><small style="color:var(--muted)">${esc(x.author)}</small></div><span class="badge ok">${x.downloads}</span></div>`).join("") : `<div class="empty">No downloads yet.</div>`}</div></div>`;
 }
 
 function pageNews() {
@@ -789,14 +939,14 @@ function pageLogin(role) {
    ========================================================= */
 const ADMIN_NAV = [
   ["overview","Overview","home"],["students","Students","users"],["academics","Academic records","chart"],
-  ["books","Library catalogue","book"],["loans","Loans and returns","swap"],["ebooks","E-Library uploads","cloud"],
+  ["books","Library catalogue","book"],["loans","Loans and returns","swap"],["reservations","Reservations","book"],["ebooks","E-Library uploads","cloud"],
   ["requests","Account requests","users"],["reports","Reports","file"],["enquiries","Enquiries","mail"],["settings","Settings","gear"]
 ];
 const STAFF_NAV = [
   ["overview","Overview","home"],["students","Students","users"],["academics","Academic records","chart"],
-  ["books","Library catalogue","book"],["loans","Loans and returns","swap"],["ebooks","E-Library uploads","cloud"],["settings","Settings","gear"]
+  ["books","Library catalogue","book"],["loans","Loans and returns","swap"],["reservations","Reservations","book"],["ebooks","E-Library uploads","cloud"],["settings","Settings","gear"]
 ];
-const STUDENT_NAV = [["profile","My profile","user"],["results","My results","chart"],["myloans","My loans","swap"],["myebooks","E-Library","cloud"]];
+const STUDENT_NAV = [["profile","My profile","user"],["results","My results","chart"],["myloans","My loans","swap"],["myres","My reservations","book"],["myebooks","E-Library","cloud"]];
 
 function dashShell(sec, inner, nav, title, u) {
   return `<div class="dash">
@@ -817,11 +967,11 @@ function pageDashboard(sec) {
   if (u.role === "admin" || u.role === "staff") {
     const NAV = u.role === "admin" ? ADMIN_NAV : STAFF_NAV;
     sec = NAV.find(n => n[0] === sec) ? sec : "overview";
-    const fn = { overview: dOverview, students: dStudents, academics: dAcademics, books: dBooks, loans: dLoans, ebooks: dEbooks, reports: dReports, enquiries: dEnquiries, requests: dRequests, settings: dSettings }[sec];
+    const fn = { overview: dOverview, students: dStudents, academics: dAcademics, books: dBooks, loans: dLoans, reservations: dReservations, ebooks: dEbooks, reports: dReports, enquiries: dEnquiries, requests: dRequests, settings: dSettings }[sec];
     return dashShell(sec, fn(), NAV, NAV.find(n => n[0] === sec)[1], u);
   }
   sec = STUDENT_NAV.find(n => n[0] === sec) ? sec : "profile";
-  const fn = { profile: sProfile, results: sResults, myloans: sLoans, myebooks: sEbooks }[sec];
+  const fn = { profile: sProfile, results: sResults, myloans: sLoans, myres: sRes, myebooks: sEbooks }[sec];
   return dashShell(sec, fn(u), STUDENT_NAV, STUDENT_NAV.find(n => n[0] === sec)[1], u);
 }
 
@@ -842,7 +992,8 @@ function dOverview() {
     <div class="stat o"><b>${db.books.length}</b><span>Books in catalogue</span></div>
     <div class="stat"><b>${out}</b><span>Books on loan</span></div>
     <div class="stat r"><b>${overdue.length}</b><span>Overdue returns</span></div>
-    <div class="stat g"><b>${db.ebooks.length}</b><span>E-Library items</span></div></div>
+    <div class="stat g"><b>${db.ebooks.filter(e => e.status !== "Pending").length}</b><span>E-Library items</span></div>
+    <div class="stat o"><b>${db.reservations.filter(r => r.status === "Pending" || r.status === "Ready").length}</b><span>Active reservations</span></div></div>
   <div class="dgrid">
     <div class="panel"><h3>Students by programme</h3><div class="bars">${counts.map(c => `<div class="row"><span>${esc(c[0])}</span><span class="track"><span class="fill" style="width:${c[1] / max * 100}%"></span></span><b>${c[1]}</b></div>`).join("")}</div></div>
     <div class="panel"><h3>Recent registrations</h3>${recent.length ? recent.map(s => `<div class="listrow" style="padding:.6rem 0"><div style="flex:1"><strong>${esc(fullName(s))}</strong><br><small style="color:var(--muted)">${esc(s.adm)} &middot; ${fmt(s.registered)}</small></div>${badge(s.status)}</div>`).join("") : `<div class="empty">No registrations yet.</div>`}
@@ -901,7 +1052,9 @@ function dBooks() {
 }
 function bookFormBody(b = {}) {
   return `<div class="fgrid">${fld("Title", "title", { required: true, value: b.title, full: true })}${fld("Author", "author", { required: true, value: b.author })}${fld("Subject", "category", { required: true, value: b.category, hint: "Example: Literature, Business" })}
-    ${fld("Call number", "call", { value: b.call })}${fld("Copies", "copies", { type: "number", min: 1, required: true, value: b.copies || 1 })}</div>`;
+    ${fld("Call number", "call", { value: b.call })}${fld("Copies", "copies", { type: "number", min: 1, required: true, value: b.copies || 1 })}
+    ${fld("ISBN", "isbn", { value: b.isbn })}${fld("Year", "year", { value: b.year })}${fld("Publisher", "publisher", { value: b.publisher, full: true })}
+    ${fld("Description", "description", { textarea: true, value: b.description, full: true, hint: "Short summary shown on the book page" })}</div>`;
 }
 
 function dLoans() {
@@ -913,16 +1066,33 @@ function dLoans() {
   <div class="tw"><table><thead><tr><th>Book</th><th>Student</th><th>Issued</th><th>Due</th><th>Status</th><th></th></tr></thead><tbody id="lnbody">${rows}</tbody></table>${rows ? "" : `<div class="empty">No loans yet. Issue a book to a student.</div>`}</div>`;
 }
 
+const resBadge = x => `<span class="badge ${x === "Pending" ? "warn" : x === "Ready" ? "ok" : x === "Fulfilled" ? "gray" : "bad"}">${x}</span>`;
+function dReservations() {
+  const rows = [...db.reservations].reverse().map(r => { const s = stu(r.studentId), b = book(r.bookId), act = r.status === "Pending" || r.status === "Ready";
+    return `<tr data-s="${esc(((s ? fullName(s) : "") + " " + (b ? b.title : "") + " " + r.status).toLowerCase())}"><td>${esc(b ? b.title : "Removed book")}<br><small style="color:var(--muted)">${b ? (bookAvail(b).left ? bookAvail(b).left + " on the shelf" : "All copies on loan") : ""}</small></td><td>${esc(s ? fullName(s) : "Removed student")}</td><td>${fmt(r.date)}</td><td>${resBadge(r.status)}</td>
+    <td><div class="acts">${r.status === "Pending" ? `<button class="btn sm ghost" data-act="readyRes" data-id="${r.id}">Mark ready</button>` : ""}${act ? `<button class="btn sm" data-act="fulfilRes" data-id="${r.id}">Issue book</button><button class="btn sm danger" data-act="cancelRes" data-id="${r.id}">Cancel</button>` : ""}</div></td></tr>`; }).join("");
+  return `<div class="tools"><input type="search" placeholder="Search by book, student or status" aria-label="Search reservations" data-rows="#rsbody"></div>
+  <div class="tw"><table><thead><tr><th>Book</th><th>Student</th><th>Reserved</th><th>Status</th><th>Actions</th></tr></thead><tbody id="rsbody">${rows}</tbody></table>${rows ? "" : `<div class="empty">No reservations yet. Students reserve books from the online catalogue.</div>`}</div>`;
+}
+function sRes(u) {
+  const l = [...db.reservations].reverse();
+  return l.length ? `<div class="tw"><table><thead><tr><th>Book</th><th>Reserved</th><th>Status</th><th></th></tr></thead><tbody>${l.map(r => `<tr><td>${esc(book(r.bookId)?.title)}</td><td>${fmt(r.date)}</td><td>${resBadge(r.status)}${r.status === "Ready" ? `<br><small style="color:var(--muted)">Collect it at the library desk.</small>` : ""}</td><td>${r.status === "Pending" || r.status === "Ready" ? `<button class="btn sm danger" data-act="cancelRes" data-id="${r.id}">Cancel</button>` : ""}</td></tr>`).join("")}</tbody></table></div>`
+    : `<div class="empty">You have no reservations. <a href="#/opac">Search the catalogue</a> and choose Reserve.</div>`;
+}
 function dEbooks() {
-  const rows = db.ebooks.map(e => `<tr><td><strong>${esc(e.title)}</strong><br><small style="color:var(--muted)">${esc(e.author)}</small></td><td>${esc(e.category)}</td><td>${esc(e.format)}</td><td>${fmt(e.added)}</td><td>${e.hasFile ? `<span class="badge ok">File attached</span>` : `<span class="badge gray">No file</span>`}</td>
-    <td><div class="acts"><button class="btn sm ghost" data-act="editEbook" data-id="${e.id}">Edit</button><button class="btn sm danger" data-act="delEbook" data-id="${e.id}">Delete</button></div></td></tr>`).join("");
-  return `<div class="tools"><span class="sp"></span><button class="btn sm" data-act="addEbook">Upload softcopy</button></div>
-  <div class="tw"><table><thead><tr><th>Title</th><th>Category</th><th>Format</th><th>Added</th><th>File</th><th>Actions</th></tr></thead><tbody>${rows}</tbody></table>${rows ? "" : `<div class="empty">No digital resources yet. Upload the first softcopy.</div>`}</div>
-  <p class="note" style="margin-top:1rem">Files are stored securely in Cloudflare R2 (up to 20 MB each). Only signed-in users can open them.</p>`;
+  const rows = db.ebooks.map(e => `<tr><td><strong>${esc(e.title)}</strong><br><small style="color:var(--muted)">${esc(e.author)}</small></td><td>${esc(e.category)}<br><small style="color:var(--muted)">${esc(e.itemType || "Book")}</small></td><td>${esc(e.format)}</td><td>${fmt(e.added)}</td>
+    <td>${e.status === "Pending" ? `<span class="badge warn">Pending</span>` : `<span class="badge ok">Published</span>`} ${e.hasFile ? "" : `<span class="badge gray">No file</span>`}<br><small style="color:var(--muted)">${e.downloads || 0} download${e.downloads === 1 ? "" : "s"}</small></td>
+    <td><div class="acts">${e.status === "Pending" ? `<button class="btn sm" data-act="approveEbook" data-id="${e.id}">Approve</button>` : ""}${e.hasFile ? `<a class="btn sm ghost" href="/api/ebooks/${e.id}/file" target="_blank" rel="noopener">Open</a>` : ""}<button class="btn sm ghost" data-act="editEbook" data-id="${e.id}">Edit</button><button class="btn sm danger" data-act="delEbook" data-id="${e.id}">Delete</button></div></td></tr>`).join("");
+  const pend = db.ebooks.filter(e => e.status === "Pending").length;
+  return `${pend ? `<div class="note" style="margin-bottom:1rem">${pend} submission${pend === 1 ? " is" : "s are"} waiting for your approval.</div>` : ""}<div class="tools"><span class="sp"></span><button class="btn sm" data-act="addEbook">Upload softcopy</button></div>
+  <div class="tw"><table><thead><tr><th>Title</th><th>Collection</th><th>Format</th><th>Added</th><th>Status</th><th>Actions</th></tr></thead><tbody>${rows}</tbody></table>${rows ? "" : `<div class="empty">No digital resources yet. Upload the first softcopy.</div>`}</div>
+  <p class="note" style="margin-top:1rem">Files are stored securely in Cloudflare R2 (up to 20 MB each). Only signed-in users can open them. Student submissions stay hidden from others until you approve them.</p>`;
 }
 function ebookFormBody(e = {}) {
   return `<div class="fgrid">${fld("Title", "title", { required: true, value: e.title, full: true })}${fld("Author", "author", { required: true, value: e.author })}${fld("Category", "category", { required: true, value: e.category })}
-    ${fld("Format", "format", { value: e.format || "PDF", options: ["PDF", "EPUB", "DOCX", "Other"] })}
+    ${fld("Item type", "itemType", { value: e.itemType || "Book", options: ITEM_TYPES })}${fld("Format", "format", { value: e.format || "PDF", options: ["PDF", "EPUB", "DOCX", "Other"] })}
+    ${fld("Year", "year", { value: e.year })}${fld("Publisher", "publisher", { value: e.publisher })}
+    ${fld("Abstract", "description", { textarea: true, value: e.description, full: true })}
     <div class="field full"><label>File${e.id ? " (leave empty to keep the current file)" : ""}</label><input type="file" name="file" accept=".pdf,.epub,.doc,.docx,.txt"><small>PDF, EPUB, DOC, DOCX or TXT. Up to 20 MB.</small></div></div>`;
 }
 
@@ -971,7 +1141,7 @@ function sProfile(u) {
     <dt>Admission number</dt><dd>${esc(s.adm)}</dd><dt>Status</dt><dd>${badge(s.status)}</dd><dt>Programme</dt><dd>${esc(prog(s.programme)?.name)}</dd><dt>Year</dt><dd>Year ${esc(s.year)}</dd>
     <dt>Gender</dt><dd>${esc(s.gender)}</dd><dt>Date of birth</dt><dd>${fmt(s.dob)}</dd><dt>Phone</dt><dd>${esc(s.phone)}</dd><dt>Email</dt><dd>${esc(s.email)}</dd>
     <dt>Address</dt><dd>${esc(s.address)}${s.region ? ", " + esc(s.region) : ""}</dd><dt>Guardian</dt><dd>${esc(s.guardian || "-")} ${esc(s.guardianPhone || "")}</dd><dt>Registered</dt><dd>${fmt(s.registered)}</dd></dl></div>
-    <div class="panel"><h3>Quick links</h3><p><a class="btn sm" href="#/dashboard/results">My results</a></p><p><a class="btn sm ghost" href="#/dashboard/myebooks">E-Library</a></p><p><a class="btn sm ghost" href="#/opac">Search the catalogue</a></p>
+    <div class="panel"><h3>Quick links</h3><p><a class="btn sm" href="#/dashboard/results">My results</a></p><p><a class="btn sm ghost" href="#/dashboard/myebooks">E-Library</a></p><p><a class="btn sm ghost" href="#/opac">Search the catalogue</a></p><p><a class="btn sm ghost" href="#/submit">Submit your work</a></p>
     ${s.status === "Pending" ? `<div class="note">Your registration is waiting for approval by the college office.</div>` : ""}</div></div>`;
 }
 function sResults(u) {
@@ -984,7 +1154,9 @@ function sResults(u) {
 }
 function sLoans(u) {
   const l = db.loans.filter(x => x.studentId === u.studentId).reverse();
-  return l.length ? `<div class="tw"><table><thead><tr><th>Book</th><th>Issued</th><th>Due</th><th>Status</th></tr></thead><tbody>${l.map(x => `<tr><td>${esc(book(x.bookId)?.title)}</td><td>${fmt(x.issued)}</td><td>${fmt(x.due)}</td><td>${x.returned ? `<span class="badge gray">Returned</span>` : x.due < today() ? `<span class="badge bad">Overdue</span>` : `<span class="badge warn">On loan</span>`}</td></tr>`).join("")}</tbody></table></div>` : `<div class="empty">You have not borrowed any books. <a href="#/opac">Search the catalogue</a>.</div>`;
+  return l.length ? `<div class="tw"><table><thead><tr><th>Book</th><th>Issued</th><th>Due</th><th>Status</th><th></th></tr></thead><tbody>${l.map(x => { const od = !x.returned && x.due < today();
+    return `<tr><td>${esc(book(x.bookId)?.title)}</td><td>${fmt(x.issued)}</td><td>${fmt(x.due)}</td><td>${x.returned ? `<span class="badge gray">Returned</span>` : od ? `<span class="badge bad">Overdue</span>` : `<span class="badge warn">On loan</span>`}</td>
+    <td>${!x.returned && !od && (x.renewals || 0) < 2 ? `<button class="btn sm ghost" data-act="renew" data-id="${x.id}">Renew +7 days</button>` : ""}</td></tr>`; }).join("")}</tbody></table></div>` : `<div class="empty">You have not borrowed any books. <a href="#/opac">Search the catalogue</a>.</div>`;
 }
 function sEbooks() { return db.ebooks.map(e => `<div class="res"><div><h4>${esc(e.title)}</h4><small>${esc(e.author)} &middot; ${esc(e.category)} &middot; ${esc(e.format)}</small></div>${e.hasFile ? `<a class="btn sm" href="/api/ebooks/${e.id}/file" download="${esc(e.fileName || e.title)}" target="_blank" rel="noopener">Read / download</a>` : `<span class="badge gray">File not uploaded yet</span>`}</div>`).join("") || `<div class="empty">No digital resources yet.</div>`; }
 
@@ -996,9 +1168,9 @@ function render() {
   clearInterval(slideTimer);
   const raw = location.hash.replace(/^#\/?/, "") || "home";
   const [pathPart] = raw.split("?");
-  const [p, sub] = pathPart.split("/");
+  const [p, sub, third] = pathPart.split("/");
   const app = $("#app");
-  const titles = { home: "Home", about: "About", programmes: "Programmes", library: "Library", opac: "Online Catalogue", elibrary: "E-Library", news: "News and events", contact: "Contact", register: "Register", login: "Sign in", dashboard: "Portal", faqs: "FAQs" };
+  const titles = { home: "Home", about: "About", programmes: "Programmes", library: "Library", opac: "Online Catalogue", bag: "Book bag", submit: "Submit your work", statistics: "Statistics", elibrary: "E-Library", news: "News and events", contact: "Contact", register: "Register", login: "Sign in", dashboard: "Portal", faqs: "FAQs" };
   document.title = `${SITE.name} | ${titles[p] || "Home"}`;
   document.documentElement.lang = lang === "sw" ? "sw" : "en";
   const pub = (inner, a) => publicShell(inner, a);
@@ -1007,7 +1179,10 @@ function render() {
     case "about": html = pub(pageAbout(), "about"); break;
     case "programmes": html = pub(pageProgrammes(), "programmes"); break;
     case "library": html = pub(pageLibrary(), "library"); break;
-    case "opac": html = pub(pageOpac(), "library"); break;
+    case "opac": html = pub(sub === "book" ? pageBook(third) : pageOpac(), "library"); break;
+    case "bag": html = pub(pageBag(), "library"); break;
+    case "submit": html = pub(pageSubmit(), "library"); break;
+    case "statistics": html = pub(pageStats(), "library"); break;
     case "elibrary": html = pub(pageElibrary(), "library"); break;
     case "news": html = pub(pageNews(), "news"); break;
     case "contact": html = pub(pageContact(), "contact"); break;
@@ -1019,6 +1194,7 @@ function render() {
   }
   app.innerHTML = html;
   window.scrollTo(0, 0);
+  if (p === "statistics") api("/statistics").then(d => { const b = $("#statbody"); if (b) b.innerHTML = statsHtml(d); }).catch(e => { const b = $("#statbody"); if (b) b.innerHTML = `<div class="empty">${esc(e.message)}</div>`; });
   if ($(".hero")) { curSlide = 0; slideTimer = setInterval(() => goSlide(curSlide + 1), 6500); }
 }
 function goSlide(i) {
@@ -1039,6 +1215,27 @@ const actions = {
   goslide(el) { goSlide(Number(el.dataset.i)); clearInterval(slideTimer); },
   async logout() { try { await api("/logout", { method: "POST" }); } catch (e) {} try { await refresh(); } catch (e) {} location.hash = "#/home"; render(); toast("You have signed out."); },
   closeModal,
+  bagAdd(el) { const b = getBag(); if (!b.includes(el.dataset.id)) b.push(el.dataset.id); setBag(b); toast("Added to your book bag."); render(); },
+  bagRemove(el) { setBag(getBag().filter(x => x !== el.dataset.id)); render(); },
+  bagClear() { setBag([]); render(); },
+  bagCsv() { const r = getBag().map(book).filter(Boolean); csv("book-bag.csv", ["Title", "Author", "Subject", "Call number", "ISBN"], r.map(b => [b.title, b.author, b.category, b.call, b.isbn || ""])); },
+  bagPrint() { window.print(); },
+  histPick(el) { const i = $("#opacq"); if (i) { i.value = el.dataset.q; opacRefresh(); } },
+  histClear() { store.set("sjc_hist", "[]"); const h = $("#opachist"); if (h) h.innerHTML = ""; },
+  elColl(el) { elState.cat = el.dataset.cat || ""; $$(".coll").forEach(c => c.classList.toggle("on", (c.dataset.cat || "") === elState.cat)); elRefresh(); },
+  reserve(el) {
+    const u = me();
+    if (!u) { toast("Please login as a student to reserve a book.", true); location.hash = "#/login/student"; return; }
+    if (u.role !== "student") { toast("Only students can reserve books.", true); return; }
+    act(() => api("/reservations", { method: "POST", body: { bookId: el.dataset.id } }), "Reserved. The library will tell you when it is ready.");
+  },
+  cancelRes(el) { act(() => api("/reservations/" + el.dataset.id + "/cancel", { method: "POST" }), "Reservation cancelled."); },
+  readyRes(el) { act(() => api("/reservations/" + el.dataset.id + "/ready", { method: "POST" }), "Marked as ready for collection."); },
+  fulfilRes(el) { act(() => api("/reservations/" + el.dataset.id + "/fulfil", { method: "POST" }), "Book issued to the student (14 days)."); },
+  renew(el) { act(() => api("/loans/" + el.dataset.id + "/renew", { method: "POST" }), "Loan renewed for 7 more days."); },
+  approveEbook(el) { act(() => api("/ebooks/" + el.dataset.id + "/approve", { method: "POST" }), "Item published in the E-Library."); },
+  fontUp() { setFont(+10); }, fontDown() { setFont(-10); },
+  contrast() { const on = !document.documentElement.classList.contains("hc"); document.documentElement.classList.toggle("hc", on); store.set("sjc_hc", on ? "1" : "0"); },
   modalback(el, e) { if (e.target === el) closeModal(); },
 
   addStudent() { modal("Add student", studentFormBody(), d => act(() => api("/students", { method: "POST", body: d }), "Student added.")); },
@@ -1108,10 +1305,12 @@ document.addEventListener("click", e => {
   if (sl) { $("#side")?.classList.remove("open"); $("#scrim")?.remove(); }
 });
 document.addEventListener("change", e => {
+  if (e.target.id === "opacq" && e.target.value.trim()) { const q = e.target.value.trim(); const h = [q, ...getHist().filter(x => x !== q)].slice(0, 6); store.set("sjc_hist", JSON.stringify(h)); const c = $("#opachist"); if (c) c.innerHTML = histChips(h); }
   const a = e.target.closest("select[data-act]");
   if (a && actions[a.dataset.act]) actions[a.dataset.act](a, e);
   if (e.target.matches("[data-rowsel]")) filterRows($(e.target.dataset.rowsel), $("[data-rows]")?.value || "", e.target.value);
-  if (e.target.matches("[data-live=opac]")) $("#opacres").innerHTML = opacList($("#opacq").value, $("#opaccat").value);
+  if (e.target.matches("[data-live=opac]")) opacRefresh();
+  if (e.target.matches("[data-live=elib]")) elRefresh();
 });
 function filterRows(tb, q, st) {
   if (!tb) return; q = (q || "").toLowerCase(); st = (st || "").toLowerCase();
@@ -1119,8 +1318,11 @@ function filterRows(tb, q, st) {
 }
 document.addEventListener("input", e => {
   if (e.target.matches("[data-rows]")) { const sel = $("[data-rowsel]"); filterRows($(e.target.dataset.rows), e.target.value, sel ? sel.value : ""); }
-  if (e.target.matches("[data-live=opac]")) $("#opacres").innerHTML = opacList($("#opacq").value, $("#opaccat").value);
+  if (e.target.matches("[data-live=opac]")) opacRefresh();
+  if (e.target.matches("[data-live=elib]")) elRefresh();
 });
+function setFont(d) { const v = Math.min(140, Math.max(90, (Number(store.get("sjc_font")) || 100) + d)); store.set("sjc_font", String(v)); document.documentElement.style.fontSize = v + "%"; }
+(function () { const f = Number(store.get("sjc_font")); if (f) document.documentElement.style.fontSize = f + "%"; if (store.get("sjc_hc") === "1") document.documentElement.classList.add("hc"); })();
 document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
 document.addEventListener("error", e => { if (e.target.tagName === "IMG") e.target.style.visibility = "hidden"; }, true);
 
@@ -1157,6 +1359,11 @@ document.addEventListener("submit", async e => {
       }
       $("#regpanel").innerHTML = `<div class="okbox"><h2>Request received</h2><p>Thank you. Your ${esc(d.role)} account request for <strong>${esc(d.email.trim().toLowerCase())}</strong> has been sent.</p>
         <p>An administrator will review it. You can log in once it is approved.</p><p style="margin:0"><a class="btn" href="#/login">${t("Login")}</a> <a class="btn ghost" href="#/home">Back to home</a></p></div>`;
+      window.scrollTo(0, 0); return;
+    }
+    if (kind === "submit") {
+      const r = await api("/submissions", { method: "POST", form: new FormData(f) }); await refresh();
+      $("#subpanel").innerHTML = `<div class="okbox"><h2>Thank you</h2><p>${r.status === "Pending" ? "Your work was received. Library staff will review it before it appears in the E-Library." : "Your item is now published in the E-Library."}</p><p style="margin:0"><a class="btn" href="#/elibrary">Open the E-Library</a> <a class="btn ghost" href="#/submit">Submit another</a></p></div>`;
       window.scrollTo(0, 0); return;
     }
     if (kind === "addstaff") { await api("/staff", { method: "POST", body: { name: d.name, email: d.email, password: d.password } }); f.reset(); toast("Staff account created."); return; }

@@ -75,3 +75,16 @@ npx wrangler dev        # http://localhost:8787
 - Student anajisajili moja kwa moja (fomu kamili). Admin na Staff wanatuma **ombi**; hawawezi kuingia hadi admin aliyepo aidhinishe kwenye *Dashboard → Account requests*.
 - Admin wa kwanza bado unamtengeneza kwa `node scripts/make-admin.mjs`.
 - Endesha `npx wrangler d1 migrations apply sjc-db --remote` ili kuongeza jedwali la `account_requests` (migration 0003).
+
+## Vipengele vipya vya maktaba (kama Koha OPAC + DSpace E-Library)
+
+- **OPAC**: tafuta kwa Title / Author / Subject / ISBN / Call number / Publisher, chuja kwa mada na upatikanaji, panga matokeo, historia ya utafutaji, jalada la kitabu, ukurasa wa maelezo ya kitabu (`#/opac/book/<id>`).
+- **Book bag** (`#/bag`): kusanya vitabu, pakua CSV au chapisha orodha.
+- **Reservations**: mwanafunzi anaweka kitabu akiba; staff/admin wanaweka *Ready*, *Issue book* (inatengeneza mkopo wa siku 14) au *Cancel*.
+- **Renew**: mwanafunzi anaongeza mkopo siku 7 (hadi mara 2), isipokuwa kitabu kimeshaombwa na mwingine au kimechelewa.
+- **E-Library**: makusanyo (collections), aina ya kipengee (Book, Journal, Thesis...), muhtasari (abstract), mwaka, mchapishaji, idadi ya downloads, utafutaji na upangaji.
+- **Submit your work** (`#/submit`): mwanafunzi au staff anapakia kazi; kazi ya mwanafunzi inasubiri idhini ya staff/admin kabla ya kuonekana.
+- **Statistics** (`#/statistics`): vitabu, nakala, downloads, mikopo kwa mwezi, vitabu vinavyoazimwa zaidi.
+- **Online databases** (DOAB, AJOL, DOAJ, Open Library, OpenStax, Gutenberg) kwenye Home, Library na E-Library.
+- **Featured books** kwenye Home, na vitufe vya ukubwa wa maandishi (A−/A+) na mwonekano wa utofautishaji mkubwa.
+- Endesha `npx wrangler d1 migrations apply sjc-db --remote` (migration 0004) kisha `npx wrangler deploy`.
